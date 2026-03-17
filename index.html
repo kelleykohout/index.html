@@ -307,6 +307,10 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <div id="page-stats" class="page">
   <div class="section">
     <div class="section-title">Team <span>Stats</span></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;">📖 About the Odds column</div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;">The <strong style="color:var(--text);">Odds</strong> column shows each team's estimated chance of winning the National Championship, displayed as <strong style="color:var(--gold);">1 in X</strong>. These come from DraftKings Sportsbook as of Selection Sunday and reflect the betting market's collective wisdom — accounting for seed, strength of schedule, injuries, and historical trends. A team showing <span style="color:var(--green);">1 in 4</span> is a heavy favorite; a team at <span style="color:var(--red);">1 in 5,000</span> is a major long shot but not impossible — upsets are what March Madness is all about. The ⭐ badge marks potential Cinderella teams (seeds 12–16) worth watching for upsets.</p>
+    </div>
     <div class="stats-controls">
       <input type="text" class="search-box" placeholder="Search team..." oninput="filterTeams(this.value)" />
       <button class="filter-btn active" onclick="filterRegion('All',this)">All</button>
@@ -341,7 +345,16 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <div id="page-odds" class="page">
   <div class="section">
     <div class="section-title">Championship <span>Odds</span></div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">DraftKings Sportsbook — Updated at Selection Sunday • Odds to win the 2026 National Championship</p>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;">📖 How to read these odds</div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:8px;">Odds show each team's estimated chance of winning the National Championship, based on <strong style="color:var(--text);">DraftKings Sportsbook</strong> as of Selection Sunday.</p>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:8px;">They are shown as <strong style="color:var(--gold);">1 in X</strong> — meaning roughly 1 chance in X that this team wins it all. A lower number means a stronger favorite.</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px;">
+        <div style="font-size:12px;"><span style="color:var(--green);font-weight:700;">1 in 4</span> — Heavy favorite (e.g. Duke)</div>
+        <div style="font-size:12px;"><span style="color:var(--text);font-weight:700;">1 in 50</span> — Reasonable dark horse</div>
+        <div style="font-size:12px;"><span style="color:var(--red);font-weight:700;">1 in 1000+</span> — Major long shot</div>
+      </div>
+    </div>
     <div class="odds-grid" id="odds-grid"></div>
   </div>
 </div>
@@ -1217,14 +1230,14 @@ function renderStats() {
     const isCinderella = t.seed >= 12;
     return `<tr>
       <td><span class="seed-badge ${seedClass}">${t.seed}</span></td>
-      <td style="font-weight:600;">${name}${isUnderdog?`<span class="underdog-badge">DOG</span>`:''}${isCinderella?`<span class="cinderella-badge">⭐</span>`:''}</td>
+      <td style="font-weight:600;">${name}${isCinderella?`<span class="cinderella-badge">⭐ Cinderella</span>`:''}</td>
       <td><span class="region-tag region-${t.region}">${t.region}</span></td>
       <td style="font-family:'Space Mono';font-size:12px;">${t.record}</td>
       <td><span class="stat-bar" style="width:${ppgBar}px;"></span>${t.ppg}</td>
       <td style="color:var(--muted);">${t.oppg}</td>
       <td><span class="stat-bar" style="width:${fgBar}px;background:linear-gradient(90deg,var(--blue),var(--green));"></span>${t.fg}%</td>
       <td>${t.three}%</td>
-      <td><span class="odds-pill ${oddsClass}">${t.odds}</span></td>
+      <td><span class="odds-pill ${oddsClass}" title="American odds: ${t.odds}">${americanToRatio(t.odds)}</span></td>
       <td style="font-size:11px;color:var(--muted);max-width:200px;">${t.notes}</td>
     </tr>`;
   }).join('');
@@ -1245,6 +1258,20 @@ function sortTable(field) {
 }
 
 // ===================== ODDS =====================
+function americanToRatio(americanOdds) {
+  const n = parseInt(String(americanOdds).replace('+',''));
+  if (isNaN(n)) return '';
+  // Convert American to implied probability, then to 1-in-X
+  let prob;
+  if (n > 0) {
+    prob = 100 / (n + 100);
+  } else {
+    prob = Math.abs(n) / (Math.abs(n) + 100);
+  }
+  const ratio = Math.round(1 / prob);
+  return '1 in ' + ratio.toLocaleString();
+}
+
 function renderOdds() {
   const oddsData = Object.entries(TEAMS)
     .filter(([n,t]) => t.odds && t.odds !== '+999900' && t.odds !== '+500000')
@@ -1267,8 +1294,8 @@ function renderOdds() {
       <div class="odds-rank">#${i+1} RANKED</div>
       <div class="odds-team-name">${name} ${t.seed >= 12 ? '⭐' : ''}</div>
       <div class="odds-seed-region"><span class="seed-badge ${seedClass}" style="display:inline-flex;width:auto;padding:0 6px;border-radius:4px;font-size:10px;">S${t.seed}</span> &nbsp;${t.region}</div>
-      <div class="odds-number ${isFav?'odds-positive':isDog?'odds-negative':''}">${t.odds}</div>
-      <div class="odds-label">to win National Championship</div>
+      <div class="odds-number ${isFav?'odds-positive':isDog?'odds-negative':''}">${americanToRatio(t.odds)}</div>
+      <div class="odds-label">chance of winning the Championship</div>
       <div class="odds-divider"></div>
       <div class="odds-record">${t.record}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;">${t.notes.substring(0,80)}${t.notes.length>80?'...':''}</div>
