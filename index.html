@@ -211,12 +211,12 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <header class="header">
   <div class="logo">BRACKET HQ</div>
   <nav class="header-nav">
-    <button class="nav-btn active" onclick="showPage('lobby')">🏠 Lobby</button>
-    <button class="nav-btn" onclick="showPage('bracket')">🏀 Bracket</button>
-    <button class="nav-btn" onclick="showPage('stats')">📊 Team Stats</button>
-    <button class="nav-btn" onclick="showPage('odds')">💰 Odds</button>
+    <button class="nav-btn active" onclick="showPage('lobby')">🏠 Home</button>
+    <button class="nav-btn" onclick="showPage('mybrackets')">📋 Brackets</button>
+    <button class="nav-btn" onclick="showPage('standings')">🏆 Standings</button>
+    <button class="nav-btn" onclick="showPage('stats')">📊 Teams</button>
     <button class="nav-btn" onclick="showPage('players')">⭐ Players</button>
-    <button class="nav-btn" onclick="showPage('leaderboard')">🏆 Leaderboard</button>
+    <button class="nav-btn" onclick="showPage('odds')">💰 Odds</button>
   </nav>
   <div class="user-pill" onclick="openUserModal()">
     <div class="user-dot"></div>
@@ -238,20 +238,43 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
     </div>
     <div class="hero-actions">
       <button class="btn-primary" onclick="openCreateModal()">+ Create Bracket</button>
-      <button class="btn-secondary" onclick="showPage('bracket')">View Full Bracket</button>
+      <button class="btn-secondary" onclick="showPage('mybrackets')">📋 View Brackets</button>
+      <button class="btn-secondary" onclick="showPage('standings')">🏆 Standings</button>
     </div>
   </div>
 
   <div class="section">
     <div class="section-title">Active Brackets <span class="badge">LIVE</span></div>
-    <div class="lobby-grid">
+    <div class="lobby-grid" id="lobby-bracket-grid">
       <div class="lobby-card create-card" onclick="openCreateModal()">
         <div class="create-icon">＋</div>
         <div class="create-text">Create New Bracket</div>
-        <div style="font-size:12px;color:var(--muted)">Invite friends to compete</div>
+        <div style="font-size:12px;color:var(--muted)">Click to get started</div>
       </div>
-      <div id="bracket-cards"></div>
     </div>
+  </div>
+</div>
+
+<!-- MY BRACKETS PAGE -->
+<div id="page-mybrackets" class="page">
+  <div class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+      <div class="section-title" style="margin-bottom:0;">My <span>Brackets</span></div>
+      <button class="btn-primary" onclick="openCreateModal()" style="padding:10px 24px;">+ New Bracket</button>
+    </div>
+    <div id="mybrackets-list"></div>
+  </div>
+</div>
+
+<!-- STANDINGS PAGE -->
+<div id="page-standings" class="page">
+  <div class="section">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
+      <div class="section-title" style="margin-bottom:0;">Bracket <span>Standings</span></div>
+      <button class="btn-secondary" onclick="openResultsModal()" style="padding:10px 20px;font-size:13px;border-color:var(--green);color:var(--green);">📋 Enter Results</button>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Points scored vs max possible points remaining. Scoring: R1=1 · R2=2 · S16=4 · E8=8 · FF=16 · Champ=32</p>
+    <div id="standings-list"></div>
   </div>
 </div>
 
@@ -265,6 +288,9 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
     <div style="display:flex;gap:10px;align-items:center;">
       <div class="score-pill">Score: <span id="my-score">0</span> pts</div>
       <button class="btn-primary" onclick="openCreateModal()" style="padding:8px 18px;font-size:13px;">New Bracket</button>
+      <button class="btn-secondary" onclick="saveBracket()" style="padding:8px 18px;font-size:13px;border-width:1px;">💾 Save</button>
+      <button class="btn-secondary" onclick="lockBracket()" style="padding:8px 18px;font-size:13px;border-color:var(--red);color:var(--red);border-width:1px;">🔒 Lock</button>
+      <button class="btn-secondary" onclick="openResultsModal()" style="padding:8px 18px;font-size:13px;border-color:var(--green);color:var(--green);border-width:1px;">📋 Results</button>
     </div>
   </div>
   <div class="region-tabs">
@@ -405,6 +431,20 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
   </div>
 </div>
 
+<!-- RESULTS MODAL -->
+<div class="modal-overlay" id="results-modal">
+  <div class="modal" style="max-width:560px;max-height:80vh;overflow-y:auto;">
+    <button class="modal-close" onclick="closeResultsModal()">✕</button>
+    <div class="modal-title">📋 Enter Game Results</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Enter the actual winning team for each completed game. Scores update automatically for all brackets.</p>
+    <div id="results-form"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn-primary" style="flex:1;" onclick="applyResults()">✅ Apply Results &amp; Update Scores</button>
+      <button class="btn-secondary" style="padding:14px 20px;" onclick="closeResultsModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -482,7 +522,7 @@ const TEAMS = {
   'Florida':         { seed:1, region:'South', record:'29-6', ppg:81.2, oppg:67.4, fg:47.5, three:37.3, odds:'+700', notes:'Defending champs! Lost SEC semis but still No. 1 South.' },
   'Prairie View':    { seed:16, region:'South', record:'18-17', ppg:68.2, oppg:69.1, fg:42.5, three:33.7, odds:'+999900', notes:'SWAC. Must beat Lehigh in First Four.' },
   'Lehigh':          { seed:16, region:'South', record:'18-16', ppg:68.8, oppg:67.3, fg:43.2, three:35.0, odds:'+999900', notes:'Patriot League. -3.5 favored vs Prairie View.' },
-  'Clemson':         { seed:8, region:'South', record:'22-12', ppg:74.9, oppg:71.8, fg:45.5, three:35.3, odds:'+20000', notes:'ACC. Brad Brownell. Dangerous 8-seed vs Florida.' },
+  'Clemson':         { seed:8, region:'South', record:'22-12', ppg:74.9, oppg:71.8, fg:45.5, three:35.3, odds:'+20000', notes:'ACC. Brad Brownell. ⚠️ Lost 2nd-leading scorer Carter Welling to torn ACL (Mar 12). Upset UNC in ACC Tourney despite injury.' },
   'Iowa':            { seed:9, region:'South', record:'20-14', ppg:73.1, oppg:71.4, fg:44.6, three:34.9, odds:'+20000', notes:'Big Ten. Bubble team. Could upset Clemson.' },
   'Vanderbilt':      { seed:5, region:'South', record:'22-12', ppg:77.2, oppg:70.5, fg:46.0, three:36.8, odds:'+6500', notes:'SEC. Better odds than 3-seed Virginia to win title.' },
   'McNeese':         { seed:12, region:'South', record:'26-7', ppg:73.9, oppg:69.4, fg:44.7, three:36.5, odds:'+200000', notes:'Southland champs. McNeese upsets are tradition.' },
@@ -558,6 +598,7 @@ function loadState() {
     brackets = s.brackets || [];
     picks = s.picks || {};
     currentUser = s.currentUser || 'Guest';
+    results = s.results || {};
     document.getElementById('username-display').textContent = currentUser;
     renderLobbyCards();
     renderLeaderboard();
@@ -565,22 +606,25 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('mm2026', JSON.stringify({ brackets, picks, currentUser }));
+  localStorage.setItem('mm2026', JSON.stringify({ brackets, picks, currentUser, results }));
 }
 
 // ===================== PAGES =====================
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  const el = document.getElementById('page-' + name);
+  if (el) el.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach((b,i) => {
-    const pages = ['lobby','bracket','stats','odds','players','leaderboard'];
+    const pages = ['lobby','mybrackets','standings','stats','players','odds'];
     b.classList.toggle('active', pages[i] === name);
   });
   if (name === 'players') renderPlayers();
   if (name === 'bracket') renderBracket(currentRegion);
   if (name === 'stats') renderStats();
   if (name === 'odds') renderOdds();
-  if (name === 'leaderboard') renderLeaderboard();
+  if (name === 'mybrackets') renderMyBrackets();
+  if (name === 'standings') renderStandings();
+  if (name === 'lobby') renderLobbyGrid();
 }
 
 // ===================== MODALS =====================
@@ -629,24 +673,80 @@ function createBracket() {
   renderLobbyCards();
   document.getElementById('bracket-title').textContent = name;
   document.getElementById('bracket-player').textContent = user;
-  showPage('bracket');
+  document.getElementById('my-score').textContent = 0;
+  // Navigate to bracket page directly
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-bracket').classList.add('active');
+  renderBracket(currentRegion);
   showToast('🏀 Bracket created! Start making picks!');
 }
 
 // ===================== LOBBY =====================
-function renderLobbyCards() {
-  const container = document.getElementById('bracket-cards');
-  if (!brackets.length) { container.innerHTML = ''; return; }
-  container.innerHTML = brackets.map(b => `
-    <div class="lobby-card" onclick="loadBracket('${b.id}')">
+function renderLobbyCards() { renderLobbyGrid(); renderMyBrackets(); renderStandings(); }
+
+function renderLobbyGrid() {
+  const container = document.getElementById('lobby-bracket-grid');
+  if (!container) return;
+  const createCard = `<div class="lobby-card create-card" onclick="openCreateModal()">
+    <div class="create-icon">＋</div>
+    <div class="create-text">Create New Bracket</div>
+    <div style="font-size:12px;color:var(--muted)">Click to get started</div>
+  </div>`;
+  if (!brackets.length) { container.innerHTML = createCard; return; }
+  container.innerHTML = createCard + brackets.map(b => {
+    const numPicks = Object.keys(picks[b.id]||{}).length;
+    const statusIcon = b.locked ? '🔒' : numPicks > 0 ? '💾' : '📝';
+    const statusLabel = b.locked ? 'Locked' : numPicks > 0 ? 'Saved' : 'In Progress';
+    return `<div class="lobby-card" onclick="loadBracket('${b.id}')">
       <div class="card-title">${b.name}</div>
-      <div class="card-meta">${b.scoring}</div>
+      <div class="card-meta">${b.user} · ${statusIcon} ${statusLabel}</div>
       <div class="card-stats">
-        <div class="card-stat"><span class="card-stat-num">${Object.keys(picks[b.id]||{}).length}</span> picks</div>
+        <div class="card-stat"><span class="card-stat-num">${numPicks}</span> picks</div>
         <div class="card-stat"><span class="card-stat-num">${b.score}</span> pts</div>
       </div>
-      <div class="card-host"><span><span class="status-dot"></span>${b.user}</span><span style="color:var(--muted);font-size:10px;">${b.created}</span></div>
-    </div>`).join('');
+      <div class="card-host"><span style="color:var(--muted);font-size:10px;">${b.created}</span><span style="color:var(--gold);font-size:11px;font-weight:700;">${b.scoring}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderMyBrackets() {
+  const container = document.getElementById('mybrackets-list');
+  if (!container) return;
+  if (!brackets.length) {
+    container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--muted);">
+      <div style="font-size:48px;margin-bottom:16px;">🏀</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">No brackets yet</div>
+      <div style="margin-bottom:24px;">Create your first bracket to start competing!</div>
+      <button class="btn-primary" onclick="openCreateModal()">+ Create Bracket</button>
+    </div>`;
+    return;
+  }
+  container.innerHTML = brackets.map((b, idx) => {
+    const numPicks = Object.keys(picks[b.id]||{}).length;
+    const maxPts = calcMaxPossible(b.id);
+    const statusIcon = b.locked ? '🔒 Locked' : numPicks > 0 ? '💾 Saved' : '📝 In Progress';
+    const statusColor = b.locked ? 'var(--red)' : numPicks > 0 ? 'var(--green)' : 'var(--muted)';
+    const rank = idx + 1;
+    return `<div class="lobby-card" style="margin-bottom:12px;display:flex;align-items:center;gap:16px;padding:16px 20px;">
+      <div style="font-family:'Bebas Neue';font-size:32px;color:var(--muted);width:36px;text-align:center;">${rank}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div style="font-weight:700;font-size:15px;">${b.name}</div>
+          <span style="font-size:11px;color:${statusColor};background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;">${statusIcon}</span>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">${b.user} · ${b.scoring} · Created ${b.created}</div>
+        <div style="display:flex;gap:20px;margin-top:8px;flex-wrap:wrap;">
+          <span style="font-size:12px;"><span style="color:var(--gold);font-weight:700;font-size:16px;">${b.score}</span> pts scored</span>
+          <span style="font-size:12px;color:var(--muted);">${numPicks} picks made</span>
+          <span style="font-size:12px;color:var(--muted);">Max possible: <span style="color:var(--blue);">${maxPts}</span> pts</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn-primary" onclick="loadBracket('${b.id}')" style="padding:8px 16px;font-size:12px;">Edit</button>
+        <button class="btn-secondary" onclick="deleteBracket('${b.id}')" style="padding:8px 14px;font-size:12px;border-color:var(--red);color:var(--red);">✕</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function loadBracket(id) {
@@ -654,8 +754,126 @@ function loadBracket(id) {
   if (activeBracket) {
     document.getElementById('bracket-title').textContent = activeBracket.name;
     document.getElementById('bracket-player').textContent = activeBracket.user;
-    showPage('bracket');
+    document.getElementById('my-score').textContent = activeBracket.score || 0;
+    // Show bracket page (not in nav, navigate directly)
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-bracket').classList.add('active');
+    renderBracket(currentRegion);
   }
+}
+
+function deleteBracket(id) {
+  if (!confirm('Delete this bracket? This cannot be undone.')) return;
+  brackets = brackets.filter(b => b.id !== id);
+  delete picks[id];
+  if (activeBracket && activeBracket.id === id) activeBracket = null;
+  saveState();
+  renderMyBrackets();
+  renderLobbyGrid();
+  renderStandings();
+  showToast('🗑️ Bracket deleted.');
+}
+
+// ===================== STANDINGS =====================
+function calcMaxPossible(bracketId) {
+  // Max possible = points from already-correct picks + points from all remaining picks
+  // (where result not yet entered, pick still has a chance)
+  const myPicks = picks[bracketId] || {};
+  let max = 0;
+  for (const [matchupId, pickedTeam] of Object.entries(myPicks)) {
+    const pts = ROUND_POINTS[getRoundNumber(matchupId)] || 1;
+    if (!results[matchupId]) {
+      // Game not played yet — this pick still has a chance
+      max += pts;
+    } else if (results[matchupId] === pickedTeam) {
+      // Already correct
+      max += pts;
+    }
+    // Wrong result = 0 more points possible for this pick
+  }
+  return max;
+}
+
+function renderStandings() {
+  const container = document.getElementById('standings-list');
+  if (!container) return;
+  if (!brackets.length) {
+    container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--muted);">
+      <div style="font-size:48px;margin-bottom:16px;">🏆</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">No brackets yet</div>
+      <button class="btn-primary" onclick="openCreateModal()" style="margin-top:8px;">+ Create Bracket</button>
+    </div>`;
+    return;
+  }
+
+  // Sort by score desc, then max possible desc
+  const ranked = [...brackets].map(b => ({
+    ...b,
+    score: calcScore(b.id),
+    maxPossible: calcMaxPossible(b.id),
+    numPicks: Object.keys(picks[b.id]||{}).length,
+    numCorrect: Object.keys(picks[b.id]||{}).filter(k => results[k] && results[k] === (picks[b.id]||{})[k]).length,
+  })).sort((a,b) => b.score - a.score || b.maxPossible - a.maxPossible);
+
+  const gamesPlayed = Object.keys(results).length;
+  const totalGames = 67;
+
+  container.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--muted);">Games with results entered: <span style="color:var(--gold);font-weight:700;">${gamesPlayed}</span> of ${totalGames}</div>
+        <div style="font-size:13px;color:var(--muted);">Brackets competing: <span style="color:var(--gold);font-weight:700;">${brackets.length}</span></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--navy3);">
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Rank</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Bracket</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Owner</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Score</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Max Possible</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Correct</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Status</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ranked.map((b, i) => {
+            const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+            const statusIcon = b.locked ? '🔒' : b.numPicks > 0 ? '💾' : '📝';
+            const statusLabel = b.locked ? 'Locked' : b.numPicks > 0 ? 'Saved' : 'Draft';
+            const pctBar = b.maxPossible > 0 ? Math.round((b.score / b.maxPossible) * 100) : 0;
+            return `<tr style="border-bottom:1px solid var(--border);${i===0?'background:rgba(255,184,0,0.05);':''}">
+              <td style="padding:14px 16px;font-family:'Bebas Neue';font-size:22px;color:var(--muted);">${medal||'#'+(i+1)}</td>
+              <td style="padding:14px 16px;">
+                <div style="font-weight:700;font-size:14px;">${b.name}</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px;">${b.scoring}</div>
+              </td>
+              <td style="padding:14px 16px;font-size:13px;">${b.user}</td>
+              <td style="padding:14px 16px;text-align:center;">
+                <div style="font-family:'Bebas Neue';font-size:28px;color:var(--gold);">${b.score}</div>
+                <div style="font-size:10px;color:var(--muted);">pts</div>
+              </td>
+              <td style="padding:14px 16px;text-align:center;">
+                <div style="font-family:'Bebas Neue';font-size:24px;color:var(--blue);">${b.maxPossible}</div>
+                <div style="margin-top:4px;height:4px;background:var(--border);border-radius:2px;width:80px;margin-left:auto;margin-right:auto;">
+                  <div style="height:4px;background:var(--blue);border-radius:2px;width:${pctBar}%;"></div>
+                </div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">${pctBar}% of max</div>
+              </td>
+              <td style="padding:14px 16px;text-align:center;">
+                <div style="font-family:'Bebas Neue';font-size:24px;color:var(--green);">${b.numCorrect}</div>
+                <div style="font-size:10px;color:var(--muted);">of ${b.numPicks}</div>
+              </td>
+              <td style="padding:14px 16px;text-align:center;font-size:12px;">${statusIcon} ${statusLabel}</td>
+              <td style="padding:14px 16px;text-align:center;">
+                <button onclick="loadBracket('${b.id}')" style="background:var(--navy3);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;">View</button>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
 }
 
 // ===================== BRACKET =====================
@@ -671,21 +889,126 @@ function getPicks() {
   return picks[activeBracket.id] || {};
 }
 
+// ===================== POINTS SYSTEM =====================
+// Points awarded per round when your pick matches actual result:
+// R1=1, R2=2, Sweet16=4, Elite8=8, Final Four=16, Championship=32
+const ROUND_POINTS = { 1:1, 2:2, 3:4, 4:8, 5:16, 6:32 };
+
+function getRoundNumber(key) {
+  if (key === 'FF_CHAMP') return 6;
+  if (key === 'FF_SF1' || key === 'FF_SF2') return 5;
+  if (key.includes('R4')) return 4;
+  if (key.includes('R3')) return 3;
+  if (key.includes('R2')) return 2;
+  return 1;
+}
+
+let results = {};
+
+function calcScore(bracketId) {
+  const myPicks = picks[bracketId] || {};
+  let score = 0;
+  for (const [matchupId, pickedTeam] of Object.entries(myPicks)) {
+    if (results[matchupId] && results[matchupId] === pickedTeam) {
+      score += ROUND_POINTS[getRoundNumber(matchupId)] || 1;
+    }
+  }
+  return score;
+}
+
+function recalcAllScores() {
+  brackets.forEach(b => { b.score = calcScore(b.id); });
+  if (activeBracket) {
+    activeBracket.score = calcScore(activeBracket.id);
+    document.getElementById('my-score').textContent = activeBracket.score;
+  }
+  saveState();
+  renderLobbyCards();
+  renderStandings();
+}
+
 function makePick(matchupId, team) {
   if (!activeBracket) {
     showToast('⚠️ Create a bracket first!');
     openCreateModal();
     return;
   }
+  if (activeBracket.locked) {
+    showToast('🔒 Bracket is locked — tournament has started!');
+    return;
+  }
   if (!picks[activeBracket.id]) picks[activeBracket.id] = {};
   picks[activeBracket.id][matchupId] = team;
-  // Calculate score
-  let score = Object.keys(picks[activeBracket.id]).length * 10;
-  activeBracket.score = score;
-  document.getElementById('my-score').textContent = score;
   saveState();
   renderBracket(currentRegion);
   showToast('✅ Picked ' + team + '!');
+}
+
+function saveBracket() {
+  if (!activeBracket) return;
+  saveState();
+  showToast('💾 Bracket saved!');
+}
+
+function lockBracket() {
+  if (!activeBracket) return;
+  const totalPicks = Object.keys(picks[activeBracket.id] || {}).length;
+  if (totalPicks < 5) { showToast('⚠️ Make more picks before locking!'); return; }
+  activeBracket.locked = true;
+  saveState();
+  renderBracket(currentRegion);
+  showToast('🔒 Bracket locked! Scores update as games are played.');
+}
+
+function openResultsModal() {
+  renderResultsForm();
+  document.getElementById('results-modal').classList.add('open');
+}
+
+function renderResultsForm() {
+  const allMatchups = [];
+  ['East','West','Midwest','South'].forEach(region => {
+    const prefix = region[0];
+    const ms = REGIONS[region] || [];
+    ms.forEach(m => {
+      allMatchups.push({ key: m.id, label: region + ' R1: ' + m.teams[0] + ' vs ' + m.teams[1], round: 1 });
+    });
+    for (let i = 0; i < 4; i++) allMatchups.push({ key: prefix+'R2_'+i, label: region+' Round of 32 — Game '+(i+1), round: 2 });
+    for (let i = 0; i < 2; i++) allMatchups.push({ key: prefix+'R3_'+i, label: region+' Sweet 16 — Game '+(i+1), round: 3 });
+    allMatchups.push({ key: prefix+'R4', label: region+' Elite Eight', round: 4 });
+  });
+  allMatchups.push({ key: 'FF_SF1', label: 'Final Four: East vs West', round: 5 });
+  allMatchups.push({ key: 'FF_SF2', label: 'Final Four: Midwest vs South', round: 5 });
+  allMatchups.push({ key: 'FF_CHAMP', label: '🏆 National Championship', round: 6 });
+
+  document.getElementById('results-form').innerHTML = allMatchups.map(m => {
+    const pts = ROUND_POINTS[m.round];
+    const cur = results[m.key] || '';
+    return '<div style="margin-bottom:12px;"><label style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;">'
+      + m.label + ' <span style="color:var(--gold);">(' + pts + ' pt' + (pts>1?'s':'') + ')</span></label>'
+      + '<input type="text" class="form-input" style="font-size:13px;" placeholder="Enter exact winning team name..." '
+      + 'value="' + cur + '" data-key="' + m.key + '" oninput="pendingResult(this)" /></div>';
+  }).join('');
+}
+
+function pendingResult(input) {
+  // Results saved on Apply button click
+}
+
+function applyResults() {
+  document.querySelectorAll('#results-form input[data-key]').forEach(input => {
+    const key = input.getAttribute('data-key');
+    const val = input.value.trim();
+    if (val) results[key] = val; else delete results[key];
+  });
+  saveState();
+  recalcAllScores();
+  showToast('✅ Results saved! Scores updated.');
+  document.getElementById('results-modal').classList.remove('open');
+}
+
+function closeResultsModal() {
+  document.getElementById('results-modal').classList.remove('open');
 }
 
 function renderBracket(region) {
@@ -967,7 +1290,7 @@ function renderLeaderboard() {
   const entries = [...DEMO_LB];
   // Add user's brackets
   brackets.forEach(b => {
-    entries.push({ name: b.user, icon: '🙋', bracket: b.name, score: b.score, correct: Math.floor(b.score/20) });
+    entries.push({ name: b.user, icon: '🙋', bracket: b.name, score: b.score, correct: Object.keys(picks[b.id]||{}).filter(k => results[k] && results[k] === (picks[b.id]||{})[k]).length });
   });
   entries.sort((a,b) => b.score - a.score);
 
@@ -1103,11 +1426,11 @@ const PLAYERS_DATA = [
 
   // ── TEXAS TECH  (Midwest, Seed 5) ─────────────────────────────
   { name:'Christian Anderson',team:'Texas Tech', pos:'G', yr:'Jr', ht:'6-3', wt:190, ppg:15.8, rpg:3.3, apg:4.0, spg:1.5, bpg:0.1, fg:45.4, three:36.7, draft:'2nd Round',  nba:false, notes:'Available for tourney after injury scare (ESPN). Key to Tech\'s deep-run potential.' },
-  { name:'JT Toppin',         team:'Texas Tech', pos:'F', yr:'Sr', ht:'6-9', wt:215, ppg:17.2, rpg:7.8, apg:2.0, spg:1.1, bpg:0.9, fg:51.3, three:28.0, draft:'1st Round',  nba:true,  notes:'NPOY candidate outside KenPom top 16 per Bleacher Report. Relentlessly stuffs stat sheet.' },
+  { name:'JT Toppin',         team:'Texas Tech', pos:'F', yr:'Sr', ht:'6-9', wt:215, ppg:17.2, rpg:7.8, apg:2.0, spg:1.1, bpg:0.9, fg:51.3, three:28.0, draft:'1st Round',  nba:true,  notes:'⚠️ OUT FOR TOURNAMENT — Torn ACL (Feb 17). Was averaging 21.8 pts & 10.8 reb, NPOY candidate. Season-ending loss cripples Tech\'s title hopes.' },
 
   // ── NORTH CAROLINA  (South, Seed 6) ──────────────────────────
   { name:'Drake Powell',      team:'North Carolina', pos:'F', yr:'Fr', ht:'6-7', wt:205, ppg:13.8, rpg:5.2, apg:1.9, spg:1.2, bpg:0.8, fg:46.6, three:36.1, draft:'1st Round', nba:true,  notes:'Elite athleticism. Potential lottery pick. UNC\'s most exciting prospect in years.' },
-  { name:'Caleb Wilson',      team:'North Carolina', pos:'F', yr:'Fr', ht:'6-9', wt:215, ppg:15.3, rpg:6.8, apg:2.2, spg:0.9, bpg:1.0, fg:49.1, three:33.0, draft:'1st Round', nba:true,  notes:'Top 2026 small forward prospect (Tankathon). Versatile scorer and rebounder.' },
+  { name:'Caleb Wilson',      team:'North Carolina', pos:'F', yr:'Fr', ht:'6-9', wt:215, ppg:15.3, rpg:6.8, apg:2.2, spg:0.9, bpg:1.0, fg:49.1, three:33.0, draft:'1st Round', nba:true,  notes:'⚠️ OUT FOR TOURNAMENT — Broken right thumb (practice, Mar 5). Top-5 NBA pick. UNC is 0-2 without him; committee dropped Heels a seed line as a result.' },
 
   // ── TENNESSEE  (Midwest, Seed 6) ─────────────────────────────
   { name:'Nate Ament',        team:'Tennessee', pos:'F', yr:'Fr', ht:'6-10',wt:220, ppg:16.8, rpg:7.1, apg:1.9, spg:0.9, bpg:1.8, fg:50.2, three:34.1, draft:'1st Round', nba:true,  notes:'All-SEC. Top NBA prospect per Hoops HQ. Key storyline: Ament vs Jefferson in Sweet 16?' },
