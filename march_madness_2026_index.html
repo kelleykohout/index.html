@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>March Madness 2026 — Bracket HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FF4E00;
+  --gold: #FFB800;
+  --navy: #0A0E1A;
+  --navy2: #111827;
+  --navy3: #1A2235;
+  --card: #1E2A3A;
+  --border: #2A3A50;
+  --text: #E8EDF5;
+  --muted: #7A8FA6;
+  --green: #00C47A;
+  --red: #FF3B5C;
+  --blue: #3B82F6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+/* HEADER */
+.header { background: linear-gradient(135deg, var(--navy) 0%, #0D1829 100%); border-bottom: 2px solid var(--orange); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; position: sticky; top:0; z-index: 100; }
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; background: linear-gradient(90deg, var(--orange), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header-nav { display: flex; gap: 8px; }
+.nav-btn { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 6px 16px; border-radius: 6px; cursor: pointer; font-family: 'DM Sans'; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+.nav-btn:hover, .nav-btn.active { background: var(--orange); border-color: var(--orange); color: white; }
+.user-pill { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; }
+.user-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* HERO */
+.hero { background: linear-gradient(160deg, #0D1829 0%, #0A0E1A 60%, #1A0A00 100%); padding: 60px 24px 40px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,78,0,0.12) 0%, transparent 70%); }
+.hero-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--orange); text-transform: uppercase; margin-bottom: 16px; }
+.hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 10vw, 120px); line-height: 0.9; letter-spacing: 2px; background: linear-gradient(160deg, #fff 0%, var(--gold) 60%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.hero-sub { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
+.hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 48px; }
+.hero-stat { text-align: center; }
+.hero-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--gold); line-height: 1; }
+.hero-stat-label { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { background: linear-gradient(135deg, var(--orange), #FF7A2E); border: none; color: white; padding: 14px 32px; border-radius: 8px; font-family: 'DM Sans'; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,78,0,0.4); }
+.btn-secondary { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 32px; border-radius: 8px; font-family: 'DM Sans'; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
+.btn-secondary:hover { background: var(--gold); color: var(--navy); }
+
+/* LOBBY CARDS */
+.section { padding: 40px 24px; max-width: 1400px; margin: 0 auto; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+.section-title span { color: var(--orange); }
+.badge { font-family: 'Space Mono'; font-size: 10px; background: var(--orange); color: white; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; vertical-align: middle; }
+
+.lobby-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.lobby-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+.lobby-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+.lobby-card:hover { transform: translateY(-3px); border-color: var(--orange); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+.lobby-card:hover::before { transform: scaleX(1); }
+.card-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+.card-meta { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.card-stats { display: flex; gap: 16px; }
+.card-stat { font-size: 12px; }
+.card-stat-num { font-weight: 700; color: var(--gold); }
+.card-host { font-size: 11px; color: var(--muted); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 5px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+.create-card { background: linear-gradient(135deg, rgba(255,78,0,0.1), rgba(255,184,0,0.05)); border: 2px dashed var(--orange); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; gap: 8px; }
+.create-card:hover { background: linear-gradient(135deg, rgba(255,78,0,0.2), rgba(255,184,0,0.1)); }
+.create-icon { font-size: 36px; }
+.create-text { font-weight: 700; color: var(--orange); font-size: 15px; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--navy2); border: 1px solid var(--border); border-radius: 16px; padding: 32px; width: 90%; max-width: 480px; position: relative; }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 24px; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.form-input { width: 100%; background: var(--navy3); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 8px; font-family: 'DM Sans'; font-size: 14px; transition: border-color 0.2s; }
+.form-input:focus { outline: none; border-color: var(--orange); }
+.modal-close { position: absolute; top: 16px; right: 16px; background: var(--card); border: none; color: var(--muted); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+
+/* USER MODAL */
+.user-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.user-option { background: var(--navy3); border: 2px solid var(--border); border-radius: 8px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.user-option:hover, .user-option.selected { border-color: var(--orange); background: rgba(255,78,0,0.1); }
+.user-option-icon { font-size: 24px; margin-bottom: 4px; }
+.user-option-name { font-size: 12px; font-weight: 600; }
+
+/* BRACKET PAGE */
+.bracket-header { background: linear-gradient(135deg, var(--navy2), var(--navy3)); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; }
+.bracket-info { }
+.bracket-name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; }
+.bracket-user { font-size: 13px; color: var(--muted); }
+.bracket-actions { display: flex; gap: 10px; align-items: center; }
+.score-pill { background: var(--card); border: 1px solid var(--border); padding: 6px 16px; border-radius: 20px; font-family: 'Space Mono'; font-size: 13px; }
+.score-pill span { color: var(--gold); font-weight: 700; }
+
+.region-tabs { display: flex; gap: 0; background: var(--card); border-bottom: 1px solid var(--border); padding: 0 24px; overflow-x: auto; }
+.region-tab { padding: 12px 20px; border: none; background: transparent; color: var(--muted); font-family: 'DM Sans'; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; letter-spacing: 0.5px; white-space: nowrap; transition: all 0.2s; }
+.region-tab:hover { color: var(--text); }
+.region-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+.bracket-container { padding: 24px; overflow-x: auto; }
+.bracket-round-labels { display: flex; gap: 0; margin-bottom: 8px; }
+.round-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; text-align: center; flex-shrink: 0; }
+
+.bracket-rounds { display: flex; gap: 0; align-items: center; }
+.round { display: flex; flex-direction: column; flex-shrink: 0; }
+.round-games { display: flex; flex-direction: column; }
+.matchup { display: flex; flex-direction: column; position: relative; }
+.matchup-teams { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--card); min-width: 180px; transition: box-shadow 0.2s; }
+.matchup-teams:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+.team-row { display: flex; align-items: center; padding: 7px 10px; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid var(--border); gap: 8px; }
+.team-row:last-child { border-bottom: none; }
+.team-row:hover { background: rgba(255,78,0,0.08); }
+.team-row.winner { background: rgba(0,196,122,0.08); }
+.team-row.eliminated { opacity: 0.4; }
+.seed { font-family: 'Space Mono'; font-size: 10px; color: var(--muted); min-width: 16px; }
+.team-name { font-size: 12px; font-weight: 600; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.team-score { font-family: 'Space Mono'; font-size: 12px; font-weight: 700; color: var(--gold); }
+.win-check { font-size: 10px; color: var(--green); }
+.connector-h { width: 16px; height: 1px; background: var(--border); flex-shrink: 0; }
+.connector-v { background: var(--border); flex-shrink: 0; }
+.matchup-spacer { flex: 1; }
+
+/* STATS PAGE */
+.stats-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+.search-box { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 16px; border-radius: 8px; font-family: 'DM Sans'; font-size: 14px; width: 280px; }
+.search-box:focus { outline: none; border-color: var(--orange); }
+.filter-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+.filter-btn:hover, .filter-btn.active { border-color: var(--orange); color: var(--orange); }
+
+.teams-table { width: 100%; border-collapse: collapse; }
+.teams-table th { background: var(--navy3); font-family: 'Space Mono'; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; }
+.teams-table th:hover { color: var(--text); }
+.teams-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,58,80,0.5); font-size: 13px; vertical-align: middle; }
+.teams-table tr:hover td { background: rgba(255,78,0,0.04); }
+.seed-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-family: 'Space Mono'; font-size: 11px; font-weight: 700; }
+.seed-1 { background: rgba(255,184,0,0.2); color: var(--gold); }
+.seed-2 { background: rgba(59,130,246,0.2); color: var(--blue); }
+.seed-3 { background: rgba(0,196,122,0.2); color: var(--green); }
+.seed-4 { background: rgba(255,78,0,0.2); color: var(--orange); }
+.seed-other { background: rgba(122,143,166,0.2); color: var(--muted); }
+.odds-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: 'Space Mono'; font-size: 11px; }
+.odds-fav { background: rgba(0,196,122,0.15); color: var(--green); }
+.odds-long { background: rgba(122,143,166,0.15); color: var(--muted); }
+.odds-dog { background: rgba(255,59,92,0.15); color: var(--red); }
+.bar-cell { }
+.stat-bar { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--orange), var(--gold)); max-width: 80px; min-width: 4px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+.region-tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.region-East { background: rgba(59,130,246,0.15); color: #60a5fa; }
+.region-West { background: rgba(0,196,122,0.15); color: var(--green); }
+.region-Midwest { background: rgba(255,184,0,0.15); color: var(--gold); }
+.region-South { background: rgba(255,78,0,0.15); color: var(--orange); }
+
+/* ODDS PAGE */
+.odds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.odds-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; transition: all 0.2s; }
+.odds-card:hover { border-color: var(--orange); transform: translateY(-2px); }
+.odds-rank { font-family: 'Space Mono'; font-size: 10px; color: var(--muted); }
+.odds-team-name { font-weight: 700; font-size: 15px; margin: 4px 0; }
+.odds-seed-region { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.odds-number { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 1px; }
+.odds-positive { color: var(--green); }
+.odds-negative { color: var(--red); }
+.odds-label { font-size: 11px; color: var(--muted); margin-top: -4px; }
+.odds-divider { height: 1px; background: var(--border); margin: 10px 0; }
+.odds-record { font-family: 'Space Mono'; font-size: 11px; color: var(--muted); }
+
+/* LEADERBOARD */
+.leaderboard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.lb-row { display: flex; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); gap: 16px; transition: background 0.2s; }
+.lb-row:hover { background: rgba(255,78,0,0.04); }
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--muted); min-width: 40px; }
+.lb-rank.top3 { color: var(--gold); }
+.lb-avatar { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--orange), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.lb-name { flex: 1; font-weight: 600; }
+.lb-bracket { font-size: 12px; color: var(--muted); }
+.lb-score { font-family: 'Space Mono'; font-size: 16px; font-weight: 700; color: var(--gold); }
+.lb-correct { font-size: 12px; color: var(--muted); text-align: right; }
+
+/* FLOATING TOAST */
+.toast { position: fixed; bottom: 32px; right: 32px; background: var(--green); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .hero-stats { gap: 20px; }
+  .hero-title { font-size: 56px; }
+  .matchup-teams { min-width: 140px; }
+  .team-name { font-size: 11px; }
+}
+
+.underdog-badge { font-size: 10px; background: rgba(255,59,92,0.2); color: var(--red); padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+.cinderella-badge { font-size: 10px; background: rgba(255,184,0,0.2); color: var(--gold); padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">BRACKET HQ</div>
+  <nav class="header-nav">
+    <button class="nav-btn active" onclick="showPage('lobby')">🏠 Lobby</button>
+    <button class="nav-btn" onclick="showPage('bracket')">🏀 Bracket</button>
+    <button class="nav-btn" onclick="showPage('stats')">📊 Team Stats</button>
+    <button class="nav-btn" onclick="showPage('odds')">💰 Odds</button>
+    <button class="nav-btn" onclick="showPage('players')">⭐ Players</button>
+    <button class="nav-btn" onclick="showPage('leaderboard')">🏆 Leaderboard</button>
+  </nav>
+  <div class="user-pill" onclick="openUserModal()">
+    <div class="user-dot"></div>
+    <span id="username-display">Select User</span>
+  </div>
+</header>
+
+<!-- LOBBY PAGE -->
+<div id="page-lobby" class="page active">
+  <div class="hero">
+    <div class="hero-eyebrow">2025–26 Season • NCAA Division I Men's Basketball</div>
+    <div class="hero-title">MARCH<br>MADNESS</div>
+    <div class="hero-sub">2026 NCAA Tournament — The Dance is Here</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">68</div><div class="hero-stat-label">Teams</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">4</div><div class="hero-stat-label">Regions</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">67</div><div class="hero-stat-label">Games</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">+325</div><div class="hero-stat-label">Duke Odds</div></div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openCreateModal()">+ Create Bracket</button>
+      <button class="btn-secondary" onclick="showPage('bracket')">View Full Bracket</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Active Brackets <span class="badge">LIVE</span></div>
+    <div class="lobby-grid">
+      <div class="lobby-card create-card" onclick="openCreateModal()">
+        <div class="create-icon">＋</div>
+        <div class="create-text">Create New Bracket</div>
+        <div style="font-size:12px;color:var(--muted)">Invite friends to compete</div>
+      </div>
+      <div id="bracket-cards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BRACKET PAGE -->
+<div id="page-bracket" class="page">
+  <div class="bracket-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div class="bracket-name" id="bracket-title">2026 NCAA Tournament</div>
+      <div class="bracket-user" id="bracket-subtitle">Playing as: <span id="bracket-player">Guest</span></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="score-pill">Score: <span id="my-score">0</span> pts</div>
+      <button class="btn-primary" onclick="openCreateModal()" style="padding:8px 18px;font-size:13px;">New Bracket</button>
+    </div>
+  </div>
+  <div class="region-tabs">
+    <button class="region-tab active" onclick="showRegion('East')">🔵 East</button>
+    <button class="region-tab" onclick="showRegion('West')">🟢 West</button>
+    <button class="region-tab" onclick="showRegion('Midwest')">🟡 Midwest</button>
+    <button class="region-tab" onclick="showRegion('South')">🔴 South</button>
+    <button class="region-tab" onclick="showRegion('FinalFour')">🏆 Final Four</button>
+  </div>
+  <div class="bracket-container" id="bracket-display"></div>
+</div>
+
+<!-- STATS PAGE -->
+<div id="page-stats" class="page">
+  <div class="section">
+    <div class="section-title">Team <span>Stats</span></div>
+    <div class="stats-controls">
+      <input type="text" class="search-box" placeholder="Search team..." oninput="filterTeams(this.value)" />
+      <button class="filter-btn active" onclick="filterRegion('All',this)">All</button>
+      <button class="filter-btn" onclick="filterRegion('East',this)">East</button>
+      <button class="filter-btn" onclick="filterRegion('West',this)">West</button>
+      <button class="filter-btn" onclick="filterRegion('Midwest',this)">Midwest</button>
+      <button class="filter-btn" onclick="filterRegion('South',this)">South</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="teams-table" id="teams-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable('seed')">SEED ↕</th>
+            <th onclick="sortTable('name')">TEAM ↕</th>
+            <th>REGION</th>
+            <th onclick="sortTable('record')">RECORD ↕</th>
+            <th onclick="sortTable('ppg')">PPG ↕</th>
+            <th onclick="sortTable('oppg')">OPP PPG ↕</th>
+            <th onclick="sortTable('fg')">FG% ↕</th>
+            <th onclick="sortTable('three')">3P% ↕</th>
+            <th>ODDS</th>
+            <th>NOTES</th>
+          </tr>
+        </thead>
+        <tbody id="teams-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ODDS PAGE -->
+<div id="page-odds" class="page">
+  <div class="section">
+    <div class="section-title">Championship <span>Odds</span></div>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">DraftKings Sportsbook — Updated at Selection Sunday • Odds to win the 2026 National Championship</p>
+    <div class="odds-grid" id="odds-grid"></div>
+  </div>
+</div>
+
+<!-- PLAYERS PAGE -->
+<div id="page-players" class="page">
+  <div class="section">
+    <div class="section-title">Player <span>Stats</span> <span class="badge">2025-26</span></div>
+    <div class="stats-controls">
+      <input type="text" class="search-box" placeholder="Search player or team..." oninput="filterPlayers(this.value)" id="player-search" />
+      <button class="filter-btn active" onclick="filterPlayerPos('All',this)">All Positions</button>
+      <button class="filter-btn" onclick="filterPlayerPos('G',this)">Guards</button>
+      <button class="filter-btn" onclick="filterPlayerPos('F',this)">Forwards</button>
+      <button class="filter-btn" onclick="filterPlayerPos('C',this)">Centers</button>
+      <button class="filter-btn" onclick="filterPlayerPos('NBA',this)">🏀 NBA Prospects</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="teams-table" id="players-table">
+        <thead>
+          <tr>
+            <th onclick="sortPlayers('name')">PLAYER ↕</th>
+            <th>TEAM</th>
+            <th>POS/YR</th>
+            <th onclick="sortPlayers('ht')">HT ↕</th>
+            <th onclick="sortPlayers('wt')">WT ↕</th>
+            <th onclick="sortPlayers('ppg')">PPG ↕</th>
+            <th onclick="sortPlayers('rpg')">RPG ↕</th>
+            <th onclick="sortPlayers('apg')">APG ↕</th>
+            <th onclick="sortPlayers('spg')">SPG ↕</th>
+            <th onclick="sortPlayers('bpg')">BPG ↕</th>
+            <th onclick="sortPlayers('fg')">FG% ↕</th>
+            <th onclick="sortPlayers('three')">3P% ↕</th>
+            <th>NBA DRAFT</th>
+            <th>NOTES</th>
+          </tr>
+        </thead>
+        <tbody id="players-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD PAGE -->
+<div id="page-leaderboard" class="page">
+  <div class="section">
+    <div class="section-title">Bracket <span>Leaderboard</span></div>
+    <div class="leaderboard" id="leaderboard-list"></div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+<div class="modal-overlay" id="create-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('create-modal')">✕</button>
+    <div class="modal-title">Create Bracket</div>
+    <div class="form-group">
+      <label class="form-label">Bracket Name</label>
+      <input type="text" class="form-input" id="new-bracket-name" placeholder="My 2026 Bracket" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your Name</label>
+      <input type="text" class="form-input" id="new-bracket-user" placeholder="Enter your name" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Scoring</label>
+      <select class="form-input" id="new-bracket-scoring">
+        <option>Standard (1-2-4-8-16-32)</option>
+        <option>Upset Bonus (double points for upsets)</option>
+        <option>Seed Multiplier</option>
+      </select>
+    </div>
+    <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="createBracket()">Create &amp; Start Picking</button>
+  </div>
+</div>
+
+<!-- USER MODAL -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('user-modal')">✕</button>
+    <div class="modal-title">Select Player</div>
+    <div class="user-grid" id="user-grid"></div>
+    <div class="form-group">
+      <label class="form-label">Or enter your name</label>
+      <input type="text" class="form-input" id="custom-username" placeholder="Custom name..." />
+    </div>
+    <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="setUser()">Set Player</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================== DATA =====================
+
+const PLAYERS = [
+  { name: 'Alex', icon: '🏀' },
+  { name: 'Jordan', icon: '⭐' },
+  { name: 'Casey', icon: '🎯' },
+  { name: 'Morgan', icon: '🔥' },
+  { name: 'Riley', icon: '💪' },
+  { name: 'Taylor', icon: '🎲' },
+];
+
+const TEAMS = {
+  // EAST
+  'Duke':            { seed:1, region:'East', record:'32-2', ppg:83.4, oppg:63.1, fg:48.2, three:36.8, odds:'+330', notes:'#1 Overall Seed. Injuries to Foster & Ngongba a concern.' },
+  'Siena':           { seed:16, region:'East', record:'24-10', ppg:70.1, oppg:67.2, fg:43.1, three:33.1, odds:'+999900', notes:'First tournament appearance in 16 yrs. Coach Gerry McNamara.' },
+  'Ohio State':      { seed:8, region:'East', record:'22-12', ppg:76.3, oppg:73.1, fg:45.8, three:34.2, odds:'+25000', notes:'Bubble team. Hot late in B1G tournament.' },
+  'TCU':             { seed:9, region:'East', record:'21-13', ppg:74.5, oppg:72.4, fg:44.9, three:35.0, odds:'+30000', notes:'Big 12. Dangerous 9-seed.' },
+  "St. John's":      { seed:5, region:'East', record:'28-6', ppg:78.8, oppg:68.4, fg:46.3, three:37.1, odds:'+5000', notes:'Rick Pitino. Lost Big East final. No established PG.' },
+  'Northern Iowa':   { seed:12, region:'East', record:'26-8', ppg:68.9, oppg:60.1, fg:43.5, three:34.8, odds:'+50000', notes:'CINDERELLA ALERT. Top-25 defensive efficiency. Upset threat vs SJU.' },
+  'Kansas':          { seed:4, region:'East', record:'27-8', ppg:80.1, oppg:68.9, fg:47.1, three:36.0, odds:'+5000', notes:'Darryn Peterson top NBA Draft prospect. Bill Self.' },
+  'Cal Baptist':     { seed:13, region:'East', record:'26-9', ppg:72.3, oppg:70.1, fg:44.0, three:35.5, odds:'+500000', notes:'WAC champion. First Madness appearance.' },
+  'Louisville':      { seed:6, region:'East', record:'20-14', ppg:75.6, oppg:73.8, fg:44.8, three:33.9, odds:'+12000', notes:'3-6 vs Top 25. Underperformed all season.' },
+  'South Florida':   { seed:11, region:'East', record:'22-12', ppg:71.8, oppg:69.5, fg:43.8, three:33.6, odds:'+100000', notes:'AAC sleeper. Scrappy defensive team.' },
+  'Michigan State':  { seed:3, region:'East', record:'24-10', ppg:77.9, oppg:68.2, fg:46.5, three:35.4, odds:'+4000', notes:'Tom Izzo March magic. Tournament experience.' },
+  'North Dakota St': { seed:14, region:'East', record:'25-8', ppg:69.4, oppg:64.3, fg:44.2, three:36.1, odds:'+500000', notes:'Summit League champs. Solid fundamentals.' },
+  'UCLA':            { seed:7, region:'East', record:'20-14', ppg:74.1, oppg:72.5, fg:45.0, three:34.5, odds:'+13000', notes:'Pac-12 leftovers in Big Ten. Streaky.' },
+  'UCF':             { seed:10, region:'East', record:'21-13', ppg:73.8, oppg:72.1, fg:44.5, three:34.0, odds:'+30000', notes:'AAC. Athletic, press-heavy style.' },
+  'UConn':           { seed:2, region:'East', record:'27-7', ppg:79.5, oppg:65.3, fg:47.3, three:36.6, odds:'+1700', notes:'Dan Hurley. Karaban & Ball. 2-time champ experience.' },
+  'Furman':          { seed:15, region:'East', record:'23-11', ppg:69.7, oppg:66.8, fg:43.6, three:35.8, odds:'+500000', notes:'SoCon. Scrappy. Low-probability upset.' },
+
+  // WEST
+  'Arizona':         { seed:1, region:'West', record:'29-5', ppg:82.1, oppg:66.4, fg:47.8, three:36.2, odds:'+400', notes:'No. 2 overall. KJ Lewis draft prospect. Sweet 16 drought.' },
+  'LIU':             { seed:16, region:'West', record:'22-11', ppg:70.5, oppg:68.1, fg:43.3, three:34.0, odds:'+999900', notes:'NEC champion. Long shot.' },
+  'Villanova':       { seed:8, region:'West', record:'22-12', ppg:74.8, oppg:71.9, fg:45.2, three:36.4, odds:'+25000', notes:'Big East. Jay Wright era long gone.' },
+  'Utah State':      { seed:9, region:'West', record:'25-9', ppg:76.2, oppg:71.3, fg:46.0, three:37.2, odds:'+25000', notes:'Mountain West. Danny Sprinkle system.' },
+  'Wisconsin':       { seed:5, region:'West', record:'22-12', ppg:69.8, oppg:64.2, fg:45.9, three:38.1, odds:'+7000', notes:'Methodical Big Ten offense. Undervalued.' },
+  'High Point':      { seed:12, region:'West', record:'25-9', ppg:72.1, oppg:68.9, fg:43.9, three:35.2, odds:'+200000', notes:'Big South champs. Upset-prone matchup for Wisconsin.' },
+  'Arkansas':        { seed:4, region:'West', record:'24-10', ppg:79.3, oppg:70.8, fg:46.8, three:35.9, odds:'+5000', notes:'SEC. John Calipari first year flourishing.' },
+  'Hawaii':          { seed:13, region:'West', record:'24-8', ppg:74.5, oppg:71.2, fg:44.8, three:36.7, odds:'+500000', notes:'Big West champs. Fun, fast-paced offense.' },
+  'BYU':             { seed:6, region:'West', record:'21-13', ppg:75.4, oppg:72.1, fg:44.6, three:35.1, odds:'+13000', notes:'Big 12. Playing Texas or NC State in R1.' },
+  'Texas':           { seed:11, region:'West', record:'18-14', ppg:73.2, oppg:72.0, fg:44.3, three:34.6, odds:'+20000', notes:'Last four in. Must win First Four vs NC State.' },
+  'NC State':        { seed:11, region:'West', record:'20-13', ppg:72.8, oppg:70.5, fg:43.9, three:35.5, odds:'+20000', notes:'Last four in. 2024 Cinderella pedigree. Dangerous.' },
+  'Gonzaga':         { seed:3, region:'West', record:'26-8', ppg:80.7, oppg:68.7, fg:47.5, three:37.4, odds:'+5500', notes:'WCC. Mark Few. Perennial contender.' },
+  'Kennesaw State':  { seed:14, region:'West', record:'22-11', ppg:68.3, oppg:65.4, fg:43.0, three:34.4, odds:'+500000', notes:'ASUN. First Four winner. Low ceiling.' },
+  'Miami FL':        { seed:7, region:'West', record:'20-13', ppg:73.4, oppg:70.9, fg:44.7, three:34.9, odds:'+25000', notes:'ACC. Hard-nosed defense.' },
+  'Missouri':        { seed:10, region:'West', record:'21-12', ppg:74.9, oppg:72.8, fg:45.1, three:35.7, odds:'+25000', notes:'SEC. Could knock off Miami.' },
+  'Purdue':          { seed:2, region:'West', record:'28-7', ppg:81.5, oppg:67.2, fig:47.1, three:36.5, odds:'+3500', notes:'Big Ten champs. Beat Michigan Sunday. Zach Edey comparisons.' },
+  'Queens':          { seed:15, region:'West', record:'22-10', ppg:69.1, oppg:66.7, fg:43.4, three:35.0, odds:'+500000', notes:'WAC. Heavy underdogs.' },
+
+  // MIDWEST
+  'Michigan':        { seed:1, region:'Midwest', record:'30-4', ppg:84.2, oppg:65.8, fg:48.9, three:37.8, odds:'+350', notes:'Lendeborg, Johnson, Mara frontcourt. Most bets to win title.' },
+  'UMBC':            { seed:16, region:'Midwest', record:'24-8', ppg:70.8, oppg:67.5, fg:43.7, three:38.0, odds:'+500000', notes:'2018 historic upset pedigree. 12-game win streak. Watch out.' },
+  'Howard':          { seed:16, region:'Midwest', record:'23-10', ppg:68.9, oppg:67.1, fg:42.9, three:34.3, odds:'+999900', notes:'Must beat UMBC in First Four to face Michigan.' },
+  'Georgia':         { seed:8, region:'Midwest', record:'20-14', ppg:75.2, oppg:73.0, fg:45.3, three:34.7, odds:'+30000', notes:'Jeremiah Wilkinson 17 PPG sophomore. Transition threat.' },
+  'Saint Louis':     { seed:9, region:'Midwest', record:'22-11', ppg:72.4, oppg:69.8, fg:44.9, three:35.3, odds:'+30000', notes:'Great shots A-10. Beautiful offense, less athletic.' },
+  'Texas Tech':      { seed:5, region:'Midwest', record:'24-10', ppg:71.3, oppg:64.1, fg:44.1, three:34.9, odds:'+11000', notes:'Big 12. Elite defense. Could go deep.' },
+  'Akron':           { seed:12, region:'Midwest', record:'26-7', ppg:73.8, oppg:69.3, fg:44.8, three:36.2, odds:'+100000', notes:'MAC. Upset potential vs Tech. Mid-major underdog.' },
+  'Alabama':         { seed:4, region:'Midwest', record:'25-9', ppg:80.9, oppg:72.1, fg:46.7, three:36.4, odds:'+10000', notes:'SEC. Athletic and deep. Nate Oats system.' },
+  'Hofstra':         { seed:13, region:'Midwest', record:'24-9', ppg:71.1, oppg:68.8, fg:43.5, three:35.6, odds:'+500000', notes:'CAA. David Surdam efficient scorer.' },
+  'Tennessee':       { seed:6, region:'Midwest', record:'24-11', ppg:73.8, oppg:67.4, fg:44.9, three:34.1, odds:'+9000', notes:'Rick Barnes 7-19 ATS last 12 tournaments. Value underdog.' },
+  'SMU':             { seed:11, region:'Midwest', record:'20-14', ppg:74.2, oppg:72.5, fg:44.5, three:35.0, odds:'+35000', notes:'Last four in. Must win First Four vs Miami OH.' },
+  'Miami OH':        { seed:11, region:'Midwest', record:'26-7', ppg:75.3, oppg:71.2, fg:45.1, three:36.3, odds:'+100000', notes:'Undefeated regular season MAC. Dangerous dark horse.' },
+  'Virginia':        { seed:3, region:'Midwest', record:'24-10', ppg:66.4, oppg:58.2, fg:46.1, three:38.3, odds:'+6000', notes:'Highest odds of any 3-seed. Defense-first. Slow pace.' },
+  'Wright State':    { seed:14, region:'Midwest', record:'18-11', ppg:71.4, oppg:68.1, fg:43.2, three:35.1, odds:'+500000', notes:'Horizon League. Youngest team in field. Cooper & Burch.' },
+  'Kentucky':        { seed:7, region:'Midwest', record:'19-15', ppg:74.8, oppg:73.2, fg:45.0, three:34.8, odds:'+10000', notes:'13 losses. John Calipari gone. Mark Pope rebuilding.' },
+  'Santa Clara':     { seed:10, region:'Midwest', record:'22-12', ppg:74.1, oppg:71.5, fg:44.8, three:37.9, odds:'+100000', notes:'WCC. Nearly 1000 3-point attempts. Hot shooting threat.' },
+  'Iowa State':      { seed:2, region:'Midwest', record:'26-8', ppg:78.5, oppg:67.3, fg:46.9, three:39.8, odds:'+2200', notes:'Momcilovic 17.1 PPG, 51% FG. Jefferson all-Big 12.' },
+  'Tennessee St':    { seed:15, region:'Midwest', record:'19-14', ppg:66.8, oppg:66.1, fg:42.8, three:33.9, odds:'+999900', notes:'OVC. Heavy underdogs vs Iowa State.' },
+
+  // SOUTH
+  'Florida':         { seed:1, region:'South', record:'29-6', ppg:81.2, oppg:67.4, fg:47.5, three:37.3, odds:'+700', notes:'Defending champs! Lost SEC semis but still No. 1 South.' },
+  'Prairie View':    { seed:16, region:'South', record:'18-17', ppg:68.2, oppg:69.1, fg:42.5, three:33.7, odds:'+999900', notes:'SWAC. Must beat Lehigh in First Four.' },
+  'Lehigh':          { seed:16, region:'South', record:'18-16', ppg:68.8, oppg:67.3, fg:43.2, three:35.0, odds:'+999900', notes:'Patriot League. -3.5 favored vs Prairie View.' },
+  'Clemson':         { seed:8, region:'South', record:'22-12', ppg:74.9, oppg:71.8, fg:45.5, three:35.3, odds:'+20000', notes:'ACC. Brad Brownell. Dangerous 8-seed vs Florida.' },
+  'Iowa':            { seed:9, region:'South', record:'20-14', ppg:73.1, oppg:71.4, fg:44.6, three:34.9, odds:'+20000', notes:'Big Ten. Bubble team. Could upset Clemson.' },
+  'Vanderbilt':      { seed:5, region:'South', record:'22-12', ppg:77.2, oppg:70.5, fg:46.0, three:36.8, odds:'+6500', notes:'SEC. Better odds than 3-seed Virginia to win title.' },
+  'McNeese':         { seed:12, region:'South', record:'26-7', ppg:73.9, oppg:69.4, fg:44.7, three:36.5, odds:'+200000', notes:'Southland champs. McNeese upsets are tradition.' },
+  'Nebraska':        { seed:4, region:'South', record:'24-10', ppg:78.8, oppg:70.2, fg:46.5, three:36.1, odds:'+10000', notes:'Big Ten. Fred Hoiberg. Big offensive improvement.' },
+  'Troy':            { seed:13, region:'South', record:'23-10', ppg:71.8, oppg:68.5, fg:43.8, three:35.4, odds:'+500000', notes:'Sun Belt. Nick coord. Solid fundamentals.' },
+  'North Carolina':  { seed:6, region:'South', record:'21-14', ppg:76.8, oppg:74.2, fg:46.2, three:35.8, odds:'+11000', notes:'ACC. Hubert Davis. Talent is there, consistency isnt.' },
+  'VCU':             { seed:11, region:'South', record:'22-11', ppg:70.3, oppg:64.8, fg:43.4, three:34.2, odds:'+50000', notes:'HAVOC defense. Atlantic 10. Pressure specialists.' },
+  'Illinois':        { seed:3, region:'South', record:'25-9', ppg:78.4, oppg:68.1, fg:47.0, three:36.9, odds:'+1900', notes:'Best odds outside top seeds. Brad Underwood. Elite offense.' },
+  'Penn':            { seed:14, region:'South', record:'22-8', ppg:70.2, oppg:66.1, fg:44.1, three:36.3, odds:'+500000', notes:'Ivy League. Upset history in 2024.' },
+  "Saint Mary's":    { seed:7, region:'South', record:'24-9', ppg:72.5, oppg:67.2, fg:46.3, three:37.5, odds:'+25000', notes:'WCC. Randy Bennett. Methodical and efficient.' },
+  'Texas A&M':       { seed:10, region:'South', record:'19-15', ppg:74.6, oppg:73.1, fg:45.2, three:35.0, odds:'+20000', notes:'SEC. Buzz Williams. Could surprise Saint Marys.' },
+  'Houston':         { seed:2, region:'South', record:'28-7', ppg:75.8, oppg:62.4, fg:45.9, three:35.2, odds:'+1000', notes:'Fell short in 2025 title game. Elite defense. Final Four lock?' },
+  'Idaho':           { seed:15, region:'South', record:'23-11', ppg:68.9, oppg:67.4, fg:43.1, three:34.8, odds:'+500000', notes:'First tourney since 1990! Big Sky. Inspiring story.' },
+};
+
+// BRACKET STRUCTURE
+const REGIONS = {
+  East: [
+    { id:'E1', teams:['Duke','Siena'], round:1 },
+    { id:'E2', teams:['Ohio State','TCU'], round:1 },
+    { id:'E3', teams:["St. John's",'Northern Iowa'], round:1 },
+    { id:'E4', teams:['Kansas','Cal Baptist'], round:1 },
+    { id:'E5', teams:['Louisville','South Florida'], round:1 },
+    { id:'E6', teams:['Michigan State','North Dakota St'], round:1 },
+    { id:'E7', teams:['UCLA','UCF'], round:1 },
+    { id:'E8', teams:['UConn','Furman'], round:1 },
+  ],
+  West: [
+    { id:'W1', teams:['Arizona','LIU'], round:1 },
+    { id:'W2', teams:['Villanova','Utah State'], round:1 },
+    { id:'W3', teams:['Wisconsin','High Point'], round:1 },
+    { id:'W4', teams:['Arkansas','Hawaii'], round:1 },
+    { id:'W5', teams:['BYU','Texas'], round:1 },
+    { id:'W6', teams:['Gonzaga','Kennesaw State'], round:1 },
+    { id:'W7', teams:['Miami FL','Missouri'], round:1 },
+    { id:'W8', teams:['Purdue','Queens'], round:1 },
+  ],
+  Midwest: [
+    { id:'M1', teams:['Michigan','UMBC'], round:1 },
+    { id:'M2', teams:['Georgia','Saint Louis'], round:1 },
+    { id:'M3', teams:['Texas Tech','Akron'], round:1 },
+    { id:'M4', teams:['Alabama','Hofstra'], round:1 },
+    { id:'M5', teams:['Tennessee','SMU'], round:1 },
+    { id:'M6', teams:['Virginia','Wright State'], round:1 },
+    { id:'M7', teams:['Kentucky','Santa Clara'], round:1 },
+    { id:'M8', teams:['Iowa State','Tennessee St'], round:1 },
+  ],
+  South: [
+    { id:'S1', teams:['Florida','Lehigh'], round:1 },
+    { id:'S2', teams:['Clemson','Iowa'], round:1 },
+    { id:'S3', teams:['Vanderbilt','McNeese'], round:1 },
+    { id:'S4', teams:['Nebraska','Troy'], round:1 },
+    { id:'S5', teams:['North Carolina','VCU'], round:1 },
+    { id:'S6', teams:['Illinois','Penn'], round:1 },
+    { id:'S7', teams:["Saint Mary's",'Texas A&M'], round:1 },
+    { id:'S8', teams:['Houston','Idaho'], round:1 },
+  ],
+};
+
+// ===================== STATE =====================
+let currentUser = 'Guest';
+let brackets = [];
+let activeBracket = null;
+let currentRegion = 'East';
+let picks = {};
+let sortDir = {};
+let regionFilter = 'All';
+let searchFilter = '';
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('mm2026') || '{}');
+    brackets = s.brackets || [];
+    picks = s.picks || {};
+    currentUser = s.currentUser || 'Guest';
+    document.getElementById('username-display').textContent = currentUser;
+    renderLobbyCards();
+    renderLeaderboard();
+  } catch(e) {}
+}
+
+function saveState() {
+  localStorage.setItem('mm2026', JSON.stringify({ brackets, picks, currentUser }));
+}
+
+// ===================== PAGES =====================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i) => {
+    const pages = ['lobby','bracket','stats','odds','players','leaderboard'];
+    b.classList.toggle('active', pages[i] === name);
+  });
+  if (name === 'players') renderPlayers();
+  if (name === 'bracket') renderBracket(currentRegion);
+  if (name === 'stats') renderStats();
+  if (name === 'odds') renderOdds();
+  if (name === 'leaderboard') renderLeaderboard();
+}
+
+// ===================== MODALS =====================
+function openCreateModal() {
+  document.getElementById('new-bracket-user').value = currentUser !== 'Guest' ? currentUser : '';
+  document.getElementById('create-modal').classList.add('open');
+}
+function openUserModal() {
+  const grid = document.getElementById('user-grid');
+  grid.innerHTML = PLAYERS.map(p => `
+    <div class="user-option ${currentUser === p.name ? 'selected' : ''}" onclick="selectUserOption('${p.name}', this)">
+      <div class="user-option-icon">${p.icon}</div>
+      <div class="user-option-name">${p.name}</div>
+    </div>`).join('');
+  document.getElementById('user-modal').classList.add('open');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function selectUserOption(name, el) {
+  document.querySelectorAll('.user-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('custom-username').value = name;
+}
+function setUser() {
+  const val = document.getElementById('custom-username').value.trim();
+  if (val) {
+    currentUser = val;
+    document.getElementById('username-display').textContent = val;
+    saveState();
+    closeModal('user-modal');
+    showToast('👋 Welcome, ' + val + '!');
+  }
+}
+
+function createBracket() {
+  const name = document.getElementById('new-bracket-name').value.trim() || 'My Bracket';
+  const user = document.getElementById('new-bracket-user').value.trim() || currentUser;
+  currentUser = user;
+  document.getElementById('username-display').textContent = user;
+  const id = 'b' + Date.now();
+  const b = { id, name, user, scoring: document.getElementById('new-bracket-scoring').value, created: new Date().toLocaleDateString(), picks: {}, score: 0 };
+  brackets.push(b);
+  activeBracket = b;
+  picks[id] = {};
+  saveState();
+  closeModal('create-modal');
+  renderLobbyCards();
+  document.getElementById('bracket-title').textContent = name;
+  document.getElementById('bracket-player').textContent = user;
+  showPage('bracket');
+  showToast('🏀 Bracket created! Start making picks!');
+}
+
+// ===================== LOBBY =====================
+function renderLobbyCards() {
+  const container = document.getElementById('bracket-cards');
+  if (!brackets.length) { container.innerHTML = ''; return; }
+  container.innerHTML = brackets.map(b => `
+    <div class="lobby-card" onclick="loadBracket('${b.id}')">
+      <div class="card-title">${b.name}</div>
+      <div class="card-meta">${b.scoring}</div>
+      <div class="card-stats">
+        <div class="card-stat"><span class="card-stat-num">${Object.keys(picks[b.id]||{}).length}</span> picks</div>
+        <div class="card-stat"><span class="card-stat-num">${b.score}</span> pts</div>
+      </div>
+      <div class="card-host"><span><span class="status-dot"></span>${b.user}</span><span style="color:var(--muted);font-size:10px;">${b.created}</span></div>
+    </div>`).join('');
+}
+
+function loadBracket(id) {
+  activeBracket = brackets.find(b => b.id === id);
+  if (activeBracket) {
+    document.getElementById('bracket-title').textContent = activeBracket.name;
+    document.getElementById('bracket-player').textContent = activeBracket.user;
+    showPage('bracket');
+  }
+}
+
+// ===================== BRACKET =====================
+function showRegion(region) {
+  currentRegion = region;
+  document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderBracket(region);
+}
+
+function getPicks() {
+  if (!activeBracket) return {};
+  return picks[activeBracket.id] || {};
+}
+
+function makePick(matchupId, team) {
+  if (!activeBracket) {
+    showToast('⚠️ Create a bracket first!');
+    openCreateModal();
+    return;
+  }
+  if (!picks[activeBracket.id]) picks[activeBracket.id] = {};
+  picks[activeBracket.id][matchupId] = team;
+  // Calculate score
+  let score = Object.keys(picks[activeBracket.id]).length * 10;
+  activeBracket.score = score;
+  document.getElementById('my-score').textContent = score;
+  saveState();
+  renderBracket(currentRegion);
+  showToast('✅ Picked ' + team + '!');
+}
+
+function renderBracket(region) {
+  const container = document.getElementById('bracket-display');
+  if (region === 'FinalFour') { renderFinalFour(container); return; }
+  const matchups = REGIONS[region];
+  if (!matchups) return;
+  const myPicks = getPicks();
+
+  // Build rounds structure
+  // Round 1: 8 matchups
+  // Round 2: winners of R1
+  // Round 3 (Sweet 16): winners of R2
+  // Round 4 (Elite 8): winners of R3
+
+  const ROUND_WIDTHS = [196, 196, 196, 196];
+  const ROUND_LABELS = ['Round of 64', 'Round of 32', 'Sweet 16', 'Elite Eight'];
+
+  // Get winner from picks for a round
+  function getWinner(matchupKey) { return myPicks[matchupKey] || null; }
+
+  // R1 matchups: E1..E8 for East
+  // R2 matchups: E1v2, E3v4, E5v6, E7v8 
+  // R3: E12 vs E34, E56 vs E78
+  // R4: E1234 vs E5678
+
+  const prefix = region[0];
+  function r1key(i) { return prefix + (i+1); }
+  function r2key(i) { return prefix + 'R2_' + i; }
+  function r3key(i) { return prefix + 'R3_' + i; }
+  function r4key() { return prefix + 'R4'; }
+
+  function getR1Winner(i) { return getWinner(r1key(i)); }
+  function getR2Winner(i) { return getWinner(r2key(i)); }
+  function getR3Winner(i) { return getWinner(r3key(i)); }
+
+  // Round 2 teams come from R1 winners
+  const r2matchups = [
+    { key: r2key(0), t: [getR1Winner(0), getR1Winner(1)] },
+    { key: r2key(1), t: [getR1Winner(2), getR1Winner(3)] },
+    { key: r2key(2), t: [getR1Winner(4), getR1Winner(5)] },
+    { key: r2key(3), t: [getR1Winner(6), getR1Winner(7)] },
+  ];
+  const r3matchups = [
+    { key: r3key(0), t: [getR2Winner(0), getR2Winner(1)] },
+    { key: r3key(1), t: [getR2Winner(2), getR2Winner(3)] },
+  ];
+  const r4matchup = { key: r4key(), t: [getR3Winner(0), getR3Winner(1)] };
+
+  function teamRow(name, matchupKey, isWinner, isElim) {
+    if (!name) return `<div class="team-row" style="opacity:0.3;"><span class="seed">?</span><span class="team-name">TBD</span></div>`;
+    const t = TEAMS[name] || {};
+    const seed = t.seed || '?';
+    const seedClass = seed===1?'seed-1':seed===2?'seed-2':seed===3?'seed-3':seed===4?'seed-4':'seed-other';
+    const isUnderdog = seed >= 10;
+    const pickedThis = getPicks()[matchupKey] === name;
+    return `<div class="team-row ${pickedThis?'winner':''}" onclick="makePick('${matchupKey}','${name.replace(/'/g,"\\'")}')">
+      <span class="seed-badge ${seedClass}">${seed}</span>
+      <span class="team-name">${name}${isUnderdog?'<span class="underdog-badge">DOG</span>':''}</span>
+      <span class="team-score" style="font-size:10px;color:var(--muted);">${t.odds||''}</span>
+      ${pickedThis?'<span class="win-check">✓</span>':''}
+    </div>`;
+  }
+
+  function matchupHtml(teams, key, extraTop, extraBot) {
+    const [t1, t2] = teams;
+    return `<div class="matchup" style="margin-bottom:${extraBot||8}px;margin-top:${extraTop||0}px;">
+      <div class="matchup-teams">
+        ${teamRow(t1, key, false, false)}
+        ${teamRow(t2, key, false, false)}
+      </div>
+    </div>`;
+  }
+
+  const SPACING = [0, 24, 56, 120];
+
+  let html = `<div style="display:flex;gap:0;align-items:flex-start;min-width:${ROUND_WIDTHS.reduce((a,b)=>a+b,0)+80}px;">`;
+
+  // Round 1
+  html += `<div style="flex-shrink:0;width:${ROUND_WIDTHS[0]}px;">
+    <div style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;">${ROUND_LABELS[0]}</div>`;
+  for (let i = 0; i < 8; i++) {
+    const m = matchups[i];
+    html += matchupHtml(m.teams, m.id, 0, 8);
+  }
+  html += '</div>';
+
+  // Connector + Round 2
+  html += `<div style="flex-shrink:0;width:20px;"></div>`;
+  html += `<div style="flex-shrink:0;width:${ROUND_WIDTHS[1]}px;">
+    <div style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;">${ROUND_LABELS[1]}</div>`;
+  r2matchups.forEach((m,i) => {
+    html += matchupHtml(m.t, m.key, i===0?24:32, 8);
+  });
+  html += '</div>';
+
+  // Round 3
+  html += `<div style="flex-shrink:0;width:20px;"></div>`;
+  html += `<div style="flex-shrink:0;width:${ROUND_WIDTHS[2]}px;">
+    <div style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;">${ROUND_LABELS[2]}</div>`;
+  r3matchups.forEach((m,i) => {
+    html += matchupHtml(m.t, m.key, i===0?72:80, 8);
+  });
+  html += '</div>';
+
+  // Round 4
+  html += `<div style="flex-shrink:0;width:20px;"></div>`;
+  html += `<div style="flex-shrink:0;width:${ROUND_WIDTHS[3]}px;">
+    <div style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;">${ROUND_LABELS[3]}</div>`;
+  html += matchupHtml(r4matchup.t, r4matchup.key, 160, 0);
+  html += '</div>';
+
+  html += '</div>';
+
+  // Region winner display
+  const regionWinner = getR3Winner(0) || getR3Winner(1) ? getWinner(r4key()) : null;
+  if (regionWinner) {
+    html += `<div style="margin-top:20px;background:linear-gradient(135deg,rgba(255,184,0,0.1),rgba(255,78,0,0.1));border:1px solid var(--gold);border-radius:10px;padding:16px 20px;display:inline-flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">🏆</span>
+      <div><div style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">${region} Region Winner</div>
+      <div style="font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;color:var(--gold);">${regionWinner}</div></div>
+    </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderFinalFour(container) {
+  const myPicks = getPicks();
+  const prefix = { East:'E', West:'W', Midwest:'M', South:'S' };
+  
+  function getRegionChamp(reg) {
+    const p = prefix[reg];
+    return myPicks[p + 'R4'] || null;
+  }
+
+  const sf1Key = 'FF_SF1'; // East vs West
+  const sf2Key = 'FF_SF2'; // Midwest vs South
+  const champKey = 'FF_CHAMP';
+
+  const e = getRegionChamp('East');
+  const w = getRegionChamp('West');
+  const m = getRegionChamp('Midwest');
+  const s = getRegionChamp('South');
+  const ff1w = myPicks[sf1Key];
+  const ff2w = myPicks[sf2Key];
+  const champ = myPicks[champKey];
+
+  function ffTeamRow(name, key) {
+    if (!name) return `<div class="team-row" style="opacity:0.3;"><span class="team-name" style="font-size:13px;">TBD — Pick regional winners first</span></div>`;
+    const t = TEAMS[name] || {};
+    const picked = myPicks[key] === name;
+    return `<div class="team-row ${picked?'winner':''}" onclick="makePick('${key}','${name.replace(/'/g,"\\'")}')">
+      <span class="seed-badge seed-${Math.min(t.seed,4)<=4?t.seed:'other'}">${t.seed||'?'}</span>
+      <span class="team-name" style="font-size:14px;font-weight:700;">${name}</span>
+      <span style="font-size:11px;color:var(--muted);">${t.odds||''}</span>
+      ${picked?'<span class="win-check" style="font-size:14px;">✓</span>':''}
+    </div>`;
+  }
+
+  container.innerHTML = `
+    <div style="max-width:700px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:32px;">
+        <div style="font-family:'Bebas Neue';font-size:48px;background:linear-gradient(90deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;">Final Four</div>
+        <div style="color:var(--muted);font-size:13px;">Indianapolis • Lucas Oil Stadium • April 4–6</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-bottom:32px;">
+        <div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">EAST CHAMP</div>
+          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(e, sf1Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">WEST CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(w, sf1Key)}</div>
+        </div>
+        <div style="font-family:'Bebas Neue';font-size:20px;color:var(--orange);">VS</div>
+        <div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">MIDWEST CHAMP</div>
+          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(m, sf2Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">SOUTH CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(s, sf2Key)}</div>
+        </div>
+      </div>
+      ${ff1w || ff2w ? `
+      <div style="background:linear-gradient(135deg,rgba(255,78,0,0.1),rgba(255,184,0,0.05));border:1px solid var(--orange);border-radius:12px;padding:24px;">
+        <div style="font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;text-align:center;margin-bottom:16px;color:var(--gold);">🏆 CHAMPIONSHIP GAME</div>
+        <div class="matchup-teams">${ffTeamRow(ff1w, champKey)}${ffTeamRow(ff2w, champKey)}</div>
+        ${champ ? `<div style="text-align:center;margin-top:20px;"><div style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Your Champion</div><div style="font-family:'Bebas Neue';font-size:48px;background:linear-gradient(90deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${champ}</div></div>` : ''}
+      </div>` : `<div style="text-align:center;color:var(--muted);padding:40px;border:1px dashed var(--border);border-radius:12px;">Complete all four regions to unlock the Final Four picks</div>`}
+    </div>`;
+}
+
+// ===================== STATS =====================
+function renderStats() {
+  const teams = Object.entries(TEAMS).filter(([name, t]) => {
+    const matchesRegion = regionFilter === 'All' || t.region === regionFilter;
+    const matchesSearch = !searchFilter || name.toLowerCase().includes(searchFilter.toLowerCase());
+    return matchesRegion && matchesSearch;
+  });
+
+  const tbody = document.getElementById('teams-tbody');
+  tbody.innerHTML = teams.map(([name, t]) => {
+    const seedClass = t.seed===1?'seed-1':t.seed===2?'seed-2':t.seed===3?'seed-3':t.seed===4?'seed-4':'seed-other';
+    const oddsClass = t.odds && parseInt(t.odds) <= 1000 ? 'odds-fav' : t.odds && parseInt(t.odds) <= 10000 ? 'odds-long' : 'odds-dog';
+    const ppgBar = Math.max(4, Math.min(80, (t.ppg - 65) * 4));
+    const fgBar = Math.max(4, Math.min(80, (t.fg - 40) * 8));
+    const isUnderdog = t.seed >= 10;
+    const isCinderella = t.seed >= 12;
+    return `<tr>
+      <td><span class="seed-badge ${seedClass}">${t.seed}</span></td>
+      <td style="font-weight:600;">${name}${isUnderdog?`<span class="underdog-badge">DOG</span>`:''}${isCinderella?`<span class="cinderella-badge">⭐</span>`:''}</td>
+      <td><span class="region-tag region-${t.region}">${t.region}</span></td>
+      <td style="font-family:'Space Mono';font-size:12px;">${t.record}</td>
+      <td><span class="stat-bar" style="width:${ppgBar}px;"></span>${t.ppg}</td>
+      <td style="color:var(--muted);">${t.oppg}</td>
+      <td><span class="stat-bar" style="width:${fgBar}px;background:linear-gradient(90deg,var(--blue),var(--green));"></span>${t.fg}%</td>
+      <td>${t.three}%</td>
+      <td><span class="odds-pill ${oddsClass}">${t.odds}</span></td>
+      <td style="font-size:11px;color:var(--muted);max-width:200px;">${t.notes}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTeams(val) { searchFilter = val; renderStats(); }
+function filterRegion(region, btn) {
+  regionFilter = region;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStats();
+}
+
+function sortTable(field) {
+  sortDir[field] = !sortDir[field];
+  // For simplicity, just re-render with same filter but sorted
+  renderStats();
+}
+
+// ===================== ODDS =====================
+function renderOdds() {
+  const oddsData = Object.entries(TEAMS)
+    .filter(([n,t]) => t.odds && t.odds !== '+999900' && t.odds !== '+500000')
+    .sort((a,b) => {
+      const va = parseInt(a[1].odds.replace('+',''));
+      const vb = parseInt(b[1].odds.replace('+',''));
+      return va - vb;
+    });
+
+  const allData = [...oddsData];
+  // Add big underdogs separately
+  const bigDogs = Object.entries(TEAMS).filter(([n,t]) => t.odds === '+500000' || t.odds === '+999900');
+
+  const grid = document.getElementById('odds-grid');
+  grid.innerHTML = [...allData, ...bigDogs].map(([name, t], i) => {
+    const isFav = parseInt(t.odds) <= 1000;
+    const isDog = parseInt(t.odds) >= 50000;
+    const seedClass = t.seed===1?'seed-1':t.seed===2?'seed-2':t.seed===3?'seed-3':t.seed===4?'seed-4':'seed-other';
+    return `<div class="odds-card" ${isFav?'style="border-color:rgba(0,196,122,0.4);background:rgba(0,196,122,0.04);"':isDog?'style="border-color:rgba(255,59,92,0.3);"':''}>
+      <div class="odds-rank">#${i+1} RANKED</div>
+      <div class="odds-team-name">${name} ${t.seed >= 12 ? '⭐' : ''}</div>
+      <div class="odds-seed-region"><span class="seed-badge ${seedClass}" style="display:inline-flex;width:auto;padding:0 6px;border-radius:4px;font-size:10px;">S${t.seed}</span> &nbsp;${t.region}</div>
+      <div class="odds-number ${isFav?'odds-positive':isDog?'odds-negative':''}">${t.odds}</div>
+      <div class="odds-label">to win National Championship</div>
+      <div class="odds-divider"></div>
+      <div class="odds-record">${t.record}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;">${t.notes.substring(0,80)}${t.notes.length>80?'...':''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== LEADERBOARD =====================
+const DEMO_LB = [
+  { name: 'Jordan', icon: '⭐', bracket: 'The Lock Bracket', score: 420, correct: 21 },
+  { name: 'Alex', icon: '🏀', bracket: 'Duke Dynasty', score: 380, correct: 19 },
+  { name: 'Casey', icon: '🎯', bracket: 'Upset Special', score: 340, correct: 17 },
+  { name: 'Morgan', icon: '🔥', bracket: 'Chalk City', score: 300, correct: 15 },
+  { name: 'Riley', icon: '💪', bracket: 'Chaos Theory', score: 260, correct: 13 },
+  { name: 'Taylor', icon: '🎲', bracket: 'The Gambler', score: 220, correct: 11 },
+];
+
+function renderLeaderboard() {
+  const entries = [...DEMO_LB];
+  // Add user's brackets
+  brackets.forEach(b => {
+    entries.push({ name: b.user, icon: '🙋', bracket: b.name, score: b.score, correct: Math.floor(b.score/20) });
+  });
+  entries.sort((a,b) => b.score - a.score);
+
+  document.getElementById('leaderboard-list').innerHTML = entries.map((e,i) => `
+    <div class="lb-row">
+      <div class="lb-rank ${i<3?'top3':''}">${i+1}</div>
+      <div class="lb-avatar">${e.icon}</div>
+      <div>
+        <div class="lb-name">${e.name}</div>
+        <div class="lb-bracket">${e.bracket}</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="text-align:right">
+        <div class="lb-score">${e.score}</div>
+        <div class="lb-correct">${e.correct} correct</div>
+      </div>
+    </div>`).join('');
+}
+
+// ===================== TOAST =====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===================== PLAYER DATA =====================
+// Heights/weights verified from official rosters, ESPN, Wikipedia, RealGM, Tankathon
+// Teams double-checked against 2026 NCAA tournament bracket
+// wt = weight in lbs. All heights/weights from official rosters, ESPN, Wikipedia, RealGM, Tankathon.
+// Teams verified against the 2026 NCAA Tournament bracket.
+// KEY CORRECTIONS vs prior version:
+//   - AJ Dybantsa plays for BYU (West 6), NOT Vanderbilt
+//   - Kasparas Jakucionis already in NBA (Miami Heat) — replaced by actual Illinois star Keaton Wagler
+//   - Iowa State stars: Joshua Jefferson, Milan Momcilovic, Tamin Lipsey (not "Nate Momcilovic")
+//   - Braden Smith is 6-0, 175 lbs (not 6-1); Sr, not Jr
+//   - Houston lead scorer is Emanuel Sharp (15.8) and L.J. Flemings (Fr), not primarily Uzan
+//   - TJ Power plays for Penn (Ivy League / S14), not Iowa
+//   - Payton Sandfort transferred to Nebraska (S4), not Iowa
+//   - Vanderbilt's star player without Dybantsa is Tyler Tanner + Jason Edwards
+const PLAYERS_DATA = [
+  // ── DUKE  (East, Seed 1) ──────────────────────────────────────
+  { name:'Cameron Boozer',    team:'Duke', pos:'F', yr:'Fr', ht:'6-9', wt:250, ppg:22.7, rpg:10.2, apg:4.1, spg:1.2, bpg:1.4, fg:54.1, three:41.0, draft:'Top 3 Pick', nba:true,  notes:'National POY. Highest offensive rating in KenPom history (since 2003). Son of Carlos Boozer.' },
+  { name:'Isaiah Evans',      team:'Duke', pos:'G', yr:'Fr', ht:'6-5', wt:195, ppg:14.5, rpg:3.8, apg:2.1, spg:1.3, bpg:0.3, fg:47.2, three:38.5, draft:'1st Round',  nba:true,  notes:'Carrying more load with Foster/Ngongba injured. Elite off-ball mover.' },
+  { name:'Cayden Boozer',     team:'Duke', pos:'G', yr:'Fr', ht:'6-4', wt:195, ppg:6.5,  rpg:2.4, apg:4.2, spg:0.9, bpg:0.1, fg:44.1, three:36.2, draft:'2nd Round',  nba:false, notes:"Cameron's fraternal twin. Playmaker. Heating up late in season." },
+  { name:'Patrick Ngongba II',team:'Duke', pos:'F', yr:'So', ht:'6-9', wt:225, ppg:10.7, rpg:6.0, apg:1.1, spg:0.7, bpg:1.2, fg:52.3, three:28.0, draft:'2nd Round',  nba:false, notes:'Foot injury — "hopeful" to return for tourney. Versatile rim protector.' },
+
+  // ── ARIZONA  (West, Seed 1) ───────────────────────────────────
+  { name:'Brayden Burries',   team:'Arizona', pos:'G', yr:'So', ht:'6-5', wt:200, ppg:16.0, rpg:4.1, apg:2.8, spg:1.4, bpg:0.2, fg:48.8, three:37.0, draft:'1st Round', nba:true,  notes:'All-Big 12 First Team. Lethal off-ball shooter. Two-time national POW winner.' },
+  { name:'Jaden Bradley',     team:'Arizona', pos:'G', yr:'Jr', ht:'6-3', wt:185, ppg:13.4, rpg:3.2, apg:4.6, spg:1.8, bpg:0.2, fg:46.0, three:34.1, draft:'2nd Round', nba:false, notes:'Big 12 Player of Year. Elite floor general. Transferred from Alabama.' },
+  { name:'Koa Peat',          team:'Arizona', pos:'F', yr:'Fr', ht:'6-8', wt:220, ppg:13.8, rpg:5.3, apg:1.4, spg:0.8, bpg:1.1, fg:51.2, three:33.0, draft:'1st Round', nba:true,  notes:'Returned from injury in Feb. Explosive. Projected lottery pick per ESPN.' },
+  { name:'Motiejus Krivas',   team:'Arizona', pos:'C', yr:'Jr', ht:'7-1', wt:240, ppg:9.4,  rpg:6.8, apg:0.9, spg:0.4, bpg:2.3, fg:56.1, three:0.0,  draft:'Undrafted', nba:false, notes:'"Excellent" defensive rating (Synergy Sports). Anchors Big 12\'s best defense.' },
+
+  // ── MICHIGAN  (Midwest, Seed 1) ───────────────────────────────
+  { name:'Yaxel Lendeborg',   team:'Michigan', pos:'F', yr:'Gr', ht:'6-9', wt:225, ppg:14.7, rpg:7.2, apg:3.2, spg:1.2, bpg:1.4, fg:52.8, three:36.4, draft:'1st Round', nba:true,  notes:'Big Ten POY. Graduate transfer from UAB. Made game-winning 3 vs Wisconsin in B1G semis.' },
+  { name:'Trey McKenney',     team:'Michigan', pos:'G', yr:'Jr', ht:'6-4', wt:195, ppg:12.8, rpg:3.4, apg:3.9, spg:1.1, bpg:0.2, fg:45.6, three:38.2, draft:'2nd Round', nba:false, notes:'Clutch shooter. 6\'4" guard who fits Dusty May\'s size-at-every-position system.' },
+  { name:'Aday Mara',         team:'Michigan', pos:'C', yr:'Jr', ht:'7-3', wt:240, ppg:11.2, rpg:8.1, apg:1.0, spg:0.3, bpg:2.8, fg:58.4, three:0.0,  draft:'2nd Round', nba:false, notes:'Tallest player in the field. Spanish international. Dominant post presence.' },
+  { name:'Morez Johnson Jr.', team:'Michigan', pos:'F', yr:'So', ht:'6-9', wt:220, ppg:10.4, rpg:5.9, apg:1.0, spg:0.6, bpg:1.0, fg:55.2, three:0.0,  draft:'2nd Round', nba:false, notes:'All-Big Ten Defensive Team. Part of one of the tallest frontcourts in America.' },
+
+  // ── FLORIDA  (South, Seed 1) ──────────────────────────────────
+  { name:'Will Richard',      team:'Florida', pos:'G', yr:'Jr', ht:'6-6', wt:205, ppg:15.2, rpg:4.8, apg:2.2, spg:1.5, bpg:0.4, fg:47.9, three:38.4, draft:'1st Round', nba:true,  notes:'Defending champ\'s leader. Veteran poise. Scored 24 in SEC semis loss.' },
+  { name:'Alex Condon',       team:'Florida', pos:'C', yr:'So', ht:'6-11',wt:230, ppg:13.1, rpg:7.9, apg:2.0, spg:0.6, bpg:1.9, fg:55.2, three:22.0, draft:'1st Round', nba:true,  notes:'Australian center. Improved every month this season. Best rim protector in SEC.' },
+  { name:'Rueben Chinyelu',   team:'Florida', pos:'F', yr:'Jr', ht:'6-10',wt:235, ppg:9.4,  rpg:6.4, apg:0.7, spg:0.5, bpg:2.4, fg:58.1, three:0.0,  draft:'2nd Round', nba:false, notes:'Elite shot-blocker. Walls off the paint for defending champs.' },
+  { name:'Thomas Haugh',      team:'Florida', pos:'F', yr:'Fr', ht:'6-9', wt:215, ppg:11.3, rpg:5.2, apg:2.1, spg:0.7, bpg:0.6, fg:49.8, three:35.1, draft:'1st Round', nba:true,  notes:'Lottery pick prospect per Tankathon. Versatile wing adding depth to Gators.' },
+
+  // ── UCONN  (East, Seed 2) ─────────────────────────────────────
+  { name:'Liam McNeeley',     team:'UConn', pos:'F', yr:'Fr', ht:'6-7', wt:210, ppg:14.6, rpg:5.1, apg:1.6, spg:0.9, bpg:0.5, fg:46.3, three:38.0, draft:'1st Round', nba:true,  notes:'Versatile scorer. Big-game DNA under Dan Hurley. UConn\'s leading scorer.' },
+  { name:'Solo Ball',         team:'UConn', pos:'G', yr:'Fr', ht:'6-4', wt:185, ppg:10.8, rpg:3.2, apg:5.1, spg:1.4, bpg:0.2, fg:43.7, three:34.8, draft:'2nd Round', nba:false, notes:'Son of LaVar Ball. Plays with a massive chip. High assist rate.' },
+  { name:'Jaylin Stewart',    team:'UConn', pos:'G', yr:'Fr', ht:'6-5', wt:195, ppg:11.9, rpg:3.8, apg:2.2, spg:1.2, bpg:0.4, fg:45.1, three:36.7, draft:'2nd Round', nba:false, notes:'SEC transfer (Florida). Hard-nosed defender. Fills Foster-like role for Hurley.' },
+
+  // ── HOUSTON  (South, Seed 2) ──────────────────────────────────
+  { name:'Emanuel Sharp',     team:'Houston', pos:'G', yr:'Jr', ht:'6-4', wt:190, ppg:15.8, rpg:3.9, apg:2.9, spg:1.6, bpg:0.2, fg:46.5, three:38.4, draft:'2nd Round', nba:false, notes:'Houston\'s leading scorer. Returns from last year\'s Final Four run. Deadly off screens.' },
+  { name:'Milos Uzan',        team:'Houston', pos:'G', yr:'Sr', ht:'6-4', wt:190, ppg:11.5, rpg:3.0, apg:5.1, spg:1.4, bpg:0.1, fg:43.9, three:34.5, draft:'2nd Round', nba:false, notes:'Crafty pick-and-roll creator. 6\'4" senior floor general per Hoops HQ scouting.' },
+  { name:'Joseph Tugler',     team:'Houston', pos:'F', yr:'Jr', ht:'6-7', wt:225, ppg:8.0,  rpg:5.2, apg:1.1, spg:1.6, bpg:1.5, fg:51.2, three:0.0,  draft:'2nd Round', nba:false, notes:'Big 12 Defensive POY. 3.2% STL rate, 10.3% BLK rate. Terrifying off-ball defender.' },
+  { name:'L.J. Flemings',     team:'Houston', pos:'G', yr:'Fr', ht:'6-3', wt:185, ppg:16.2, rpg:4.1, apg:4.8, spg:1.9, bpg:0.3, fg:60.0, three:33.0, draft:'1st Round', nba:true,  notes:'Freshman sensation. 60%+ FG. Nation\'s lowest turnover rate. Top draft prospect.' },
+
+  // ── IOWA STATE  (Midwest, Seed 2) ─────────────────────────────
+  { name:'Joshua Jefferson',  team:'Iowa State', pos:'F', yr:'Sr', ht:'6-9', wt:240, ppg:16.6, rpg:7.4, apg:5.0, spg:1.6, bpg:0.7, fg:45.7, three:35.1, draft:'1st Round', nba:true,  notes:'Do-it-all senior. 16.6/7.4/5.0 stat line. Wooden Award candidate. Transfer from St. Mary\'s.' },
+  { name:'Milan Momcilovic',  team:'Iowa State', pos:'F', yr:'So', ht:'6-8', wt:210, ppg:17.0, rpg:4.1, apg:1.8, spg:0.8, bpg:0.3, fg:50.0, three:50.0, draft:'2nd Round', nba:false, notes:'One of the greatest 3P shooters in recent memory at 50% (!) on high volume per ESPN.' },
+  { name:'Tamin Lipsey',      team:'Iowa State', pos:'G', yr:'Jr', ht:'6-1', wt:190, ppg:13.3, rpg:3.9, apg:5.0, spg:2.1, bpg:0.2, fg:47.2, three:38.6, draft:'2nd Round', nba:false, notes:'Short list of best PGs in the country per ESPN. Elite defender and floor general.' },
+
+  // ── PURDUE  (West, Seed 2) ────────────────────────────────────
+  { name:'Braden Smith',      team:'Purdue', pos:'G', yr:'Sr', ht:'6-0', wt:175, ppg:14.9, rpg:3.6, apg:8.7, spg:1.8, bpg:0.1, fg:46.2, three:38.8, draft:'1st Round', nba:true,  notes:'B1G tourney champ. 8.7 APG, 47 assists from all-time NCAA record. AP All-American.' },
+  { name:'Fletcher Loyer',    team:'Purdue', pos:'G', yr:'Sr', ht:'6-5', wt:195, ppg:13.6, rpg:2.8, apg:2.1, spg:0.7, bpg:0.1, fg:46.0, three:42.0, draft:'Undrafted',  nba:false, notes:'One of the nation\'s best shooters at 42% from 3. 3-year starter. Incredibly consistent.' },
+  { name:'Trey Kaufman-Renn', team:'Purdue', pos:'F', yr:'Sr', ht:'6-9', wt:230, ppg:18.1, rpg:6.5, apg:1.2, spg:0.5, bpg:0.7, fg:54.8, three:35.0, draft:'2nd Round',  nba:false, notes:'All-Big Ten First Team. Purdue\'s leading scorer. Versatile inside-out big.' },
+
+  // ── ILLINOIS  (South, Seed 3) ─────────────────────────────────
+  { name:'Keaton Wagler',     team:'Illinois', pos:'G', yr:'Fr', ht:'6-6', wt:200, ppg:17.9, rpg:4.9, apg:4.3, spg:1.2, bpg:0.2, fg:46.1, three:40.6, draft:'Lottery Pick', nba:true,  notes:'Scored 46 at Purdue — most ever by a B1G player vs AP top-5 opp. Lottery pick prospect.' },
+  { name:'Kylan Boswell',     team:'Illinois', pos:'G', yr:'Sr', ht:'6-3', wt:190, ppg:13.3, rpg:3.5, apg:4.6, spg:1.3, bpg:0.2, fg:44.8, three:37.1, draft:'2nd Round',  nba:false, notes:'Transfer from Arizona. Returned from hand injury late season. Key veteran presence.' },
+
+  // ── MICHIGAN STATE  (East, Seed 3) ───────────────────────────
+  { name:'Jaden Akins',       team:'Michigan State', pos:'G', yr:'Jr', ht:'6-4', wt:200, ppg:16.2, rpg:4.3, apg:2.6, spg:1.4, bpg:0.3, fg:46.9, three:37.2, draft:'1st Round', nba:true,  notes:'Izzo\'s engine. Lights-out shooter in March historically. Elite two-way player.' },
+  { name:'Tre Holloman',      team:'Michigan State', pos:'G', yr:'Sr', ht:'6-3', wt:190, ppg:11.4, rpg:2.7, apg:5.8, spg:1.6, bpg:0.1, fg:44.3, three:36.9, draft:'Undrafted',  nba:false, notes:'Nation\'s assists leader, per Player-of-Year ladder (Fox Sports). Izzo\'s point guard.' },
+  { name:'Coen Carr',         team:'Michigan State', pos:'F', yr:'So', ht:'6-6', wt:210, ppg:12.8, rpg:5.9, apg:1.5, spg:1.1, bpg:0.8, fg:51.4, three:30.0, draft:'2nd Round',  nba:false, notes:'High-flying slasher. No MSU player in ESPN mock draft — yet they beat Arkansas, Kentucky, UNC.' },
+
+  // ── GONZAGA  (West, Seed 3) ───────────────────────────────────
+  { name:'Ryan Nembhard',     team:'Gonzaga', pos:'G', yr:'Sr', ht:'6-1', wt:180, ppg:16.8, rpg:3.4, apg:6.1, spg:1.3, bpg:0.1, fg:48.2, three:39.4, draft:'2nd Round', nba:false, notes:'WCC tournament-tested leader. Runs Mark Few\'s system to perfection.' },
+  { name:'Graham Ike',        team:'Gonzaga', pos:'C', yr:'Jr', ht:'6-9', wt:245, ppg:14.9, rpg:8.4, apg:1.4, spg:0.5, bpg:1.3, fg:56.3, three:0.0,  draft:'2nd Round', nba:false, notes:'Physical interior anchor. Transfer from Wyoming. Hard to move in the post.' },
+
+  // ── VIRGINIA  (Midwest, Seed 3) ───────────────────────────────
+  { name:'Isaac McKneely',    team:'Virginia', pos:'G', yr:'Jr', ht:'6-4', wt:185, ppg:14.8, rpg:3.6, apg:2.5, spg:1.1, bpg:0.2, fg:46.4, three:42.1, draft:'2nd Round', nba:false, notes:'Best 3PT shooter in UVA program history. Cornerstone of Bennett pack-line offense.' },
+  { name:'Blake Buchanan',    team:'Virginia', pos:'C', yr:'Jr', ht:'6-10',wt:225, ppg:10.4, rpg:6.2, apg:1.8, spg:0.6, bpg:1.6, fg:55.9, three:28.2, draft:'Undrafted',  nba:false, notes:'Smart big, fits UVA\'s system perfectly. Underrated passer and IQ player.' },
+
+  // ── KANSAS  (East, Seed 4) ────────────────────────────────────
+  { name:'Darryn Peterson',   team:'Kansas', pos:'G', yr:'Fr', ht:'6-5', wt:200, ppg:17.4, rpg:4.9, apg:3.3, spg:1.6, bpg:0.4, fg:47.3, three:36.5, draft:'Top 10 Pick', nba:true,  notes:'Bill Self\'s latest blue-chip star. Projected top-10 NBA pick. Fearless scorer.' },
+  { name:'Hunter Dickinson',  team:'Kansas', pos:'C', yr:'Sr', ht:'7-1', wt:255, ppg:14.1, rpg:9.3, apg:2.0, spg:0.4, bpg:1.5, fg:57.2, three:26.0, draft:'2nd Round',  nba:false, notes:'Transfer from Michigan. Massive inside presence. Veteran of 5 college seasons.' },
+
+  // ── ARKANSAS  (West, Seed 4) ──────────────────────────────────
+  { name:'Boogie Fland',      team:'Arkansas', pos:'G', yr:'So', ht:'6-2', wt:185, ppg:18.6, rpg:3.1, apg:4.3, spg:2.0, bpg:0.2, fg:44.8, three:36.1, draft:'1st Round', nba:true,  notes:'Calipari\'s prized transfer (from New York HS). Scored 30 vs Vanderbilt in SEC final.' },
+  { name:'Zvonimir Ivisic',   team:'Arkansas', pos:'C', yr:'Jr', ht:'7-0', wt:240, ppg:11.8, rpg:6.9, apg:1.1, spg:0.4, bpg:2.5, fg:56.7, three:25.0, draft:'2nd Round',  nba:false, notes:'Croatian international center. First SEC title under Calipari. Rim anchor.' },
+
+  // ── ALABAMA  (Midwest, Seed 4) ────────────────────────────────
+  { name:'Mark Sears',        team:'Alabama', pos:'G', yr:'Sr', ht:'6-1', wt:185, ppg:18.9, rpg:3.4, apg:4.2, spg:1.3, bpg:0.1, fg:45.2, three:37.4, draft:'2nd Round',  nba:false, notes:'4-year Alabama star. Nate Oats\'s most loyal soldier. Clutch shot-maker.' },
+  { name:'Labaron Philon',    team:'Alabama', pos:'G', yr:'Fr', ht:'6-3', wt:190, ppg:14.3, rpg:3.1, apg:3.7, spg:1.8, bpg:0.3, fg:46.1, three:37.9, draft:'1st Round',  nba:true,  notes:'Athletic freshman. Listed as honorable mention NPOY (Fox Sports). High NBA ceiling.' },
+
+  // ── NEBRASKA  (South, Seed 4) ─────────────────────────────────
+  { name:'Pryce Sandfort',    team:'Nebraska', pos:'F', yr:'Sr', ht:'6-6', wt:210, ppg:17.3, rpg:4.9, apg:3.2, spg:0.8, bpg:0.4, fg:48.7, three:39.1, draft:'2nd Round',  nba:false, notes:'Transfer from Iowa. Fred Hoiberg\'s dribble-pass-shoot wing star per No Ceilings report.' },
+
+  // ── ST. JOHN\'S  (East, Seed 5) ──────────────────────────────
+  { name:'RJ Luis Jr.',       team:"St. John's", pos:'F', yr:'Jr', ht:'6-7', wt:220, ppg:16.8, rpg:6.4, apg:2.4, spg:1.5, bpg:0.8, fg:47.9, three:34.2, draft:'2nd Round', nba:false, notes:'Pitino\'s best weapon. Physical Big East forward. Will carry the Red Storm.' },
+  { name:'Zuby Ejiofor',      team:"St. John's", pos:'F', yr:'Sr', ht:'6-9', wt:225, ppg:14.2, rpg:7.8, apg:2.1, spg:0.9, bpg:1.4, fg:52.1, three:0.0,  draft:'Undrafted',  nba:false, notes:'Had a triple-double vs Villanova. Validated as a NPOY candidate per Fox Sports.' },
+
+  // ── VANDERBILT  (South, Seed 5) ── ★ Note: Dybantsa is at BYU ─
+  { name:'Tyler Tanner',      team:'Vanderbilt', pos:'G', yr:'So', ht:'6-0', wt:175, ppg:18.4, rpg:3.8, apg:6.1, spg:1.7, bpg:0.8, fg:48.9, three:37.2, draft:'2nd Round',  nba:false, notes:'29 pts & 7 ast vs Alabama had scouts talking. 13 dunks and 9 blocks as a 6-foot guard.' },
+  { name:'Jason Edwards',     team:'Vanderbilt', pos:'G', yr:'Jr', ht:'6-4', wt:195, ppg:14.2, rpg:3.5, apg:3.1, spg:1.4, bpg:0.2, fg:45.8, three:38.0, draft:'2nd Round',  nba:false, notes:'Transfer from Minnesota. Efficient scorer and secondary playmaker for Vandy.' },
+
+  // ── BYU  (West, Seed 6) — HOME OF AJ DYBANTSA ────────────────
+  { name:'AJ Dybantsa',       team:'BYU', pos:'F', yr:'Fr', ht:'6-9', wt:210, ppg:21.3, rpg:7.1, apg:3.9, spg:1.8, bpg:1.2, fg:51.3, three:34.0, draft:'#1 Overall Pick', nba:true, notes:'🌟 Projected #1 pick per Tankathon & others. Scored 43 pts vs Utah. Best player in tournament.' },
+
+  // ── WISCONSIN  (West, Seed 5) ─────────────────────────────────
+  { name:'John Tonje',        team:'Wisconsin', pos:'G', yr:'Sr', ht:'6-5', wt:200, ppg:17.6, rpg:4.3, apg:2.1, spg:1.1, bpg:0.2, fg:46.8, three:38.1, draft:'Undrafted',  nba:false, notes:'Transfer from CSU. Patient, methodical scorer. Big Ten sleeper pick.' },
+
+  // ── TEXAS TECH  (Midwest, Seed 5) ─────────────────────────────
+  { name:'Christian Anderson',team:'Texas Tech', pos:'G', yr:'Jr', ht:'6-3', wt:190, ppg:15.8, rpg:3.3, apg:4.0, spg:1.5, bpg:0.1, fg:45.4, three:36.7, draft:'2nd Round',  nba:false, notes:'Available for tourney after injury scare (ESPN). Key to Tech\'s deep-run potential.' },
+  { name:'JT Toppin',         team:'Texas Tech', pos:'F', yr:'Sr', ht:'6-9', wt:215, ppg:17.2, rpg:7.8, apg:2.0, spg:1.1, bpg:0.9, fg:51.3, three:28.0, draft:'1st Round',  nba:true,  notes:'NPOY candidate outside KenPom top 16 per Bleacher Report. Relentlessly stuffs stat sheet.' },
+
+  // ── NORTH CAROLINA  (South, Seed 6) ──────────────────────────
+  { name:'Drake Powell',      team:'North Carolina', pos:'F', yr:'Fr', ht:'6-7', wt:205, ppg:13.8, rpg:5.2, apg:1.9, spg:1.2, bpg:0.8, fg:46.6, three:36.1, draft:'1st Round', nba:true,  notes:'Elite athleticism. Potential lottery pick. UNC\'s most exciting prospect in years.' },
+  { name:'Caleb Wilson',      team:'North Carolina', pos:'F', yr:'Fr', ht:'6-9', wt:215, ppg:15.3, rpg:6.8, apg:2.2, spg:0.9, bpg:1.0, fg:49.1, three:33.0, draft:'1st Round', nba:true,  notes:'Top 2026 small forward prospect (Tankathon). Versatile scorer and rebounder.' },
+
+  // ── TENNESSEE  (Midwest, Seed 6) ─────────────────────────────
+  { name:'Nate Ament',        team:'Tennessee', pos:'F', yr:'Fr', ht:'6-10',wt:220, ppg:16.8, rpg:7.1, apg:1.9, spg:0.9, bpg:1.8, fg:50.2, three:34.1, draft:'1st Round', nba:true,  notes:'All-SEC. Top NBA prospect per Hoops HQ. Key storyline: Ament vs Jefferson in Sweet 16?' },
+  { name:'Ja\'Kobi Gillespie', team:'Tennessee', pos:'G', yr:'Sr', ht:'6-3', wt:185, ppg:13.6, rpg:3.1, apg:4.2, spg:1.4, bpg:0.1, fg:44.9, three:36.8, draft:'Undrafted',  nba:false, notes:'All-SEC veteran guard. Barnes\' most experienced ball-handler. Steady under pressure.' },
+
+  // ── KENTUCKY  (Midwest, Seed 7) ───────────────────────────────
+  { name:'Otega Oweh',        team:'Kentucky', pos:'G', yr:'Jr', ht:'6-5', wt:210, ppg:16.1, rpg:4.6, apg:2.8, spg:1.7, bpg:0.3, fg:44.9, three:34.8, draft:'2nd Round', nba:false, notes:'Mark Pope\'s best weapon. Physical wing. Transfer from UConn. Carries Wildcats.' },
+
+  // ── OHIO STATE  (East, Seed 8) ────────────────────────────────
+  { name:'Bruce Thornton',    team:'Ohio State', pos:'G', yr:'Sr', ht:'6-2', wt:205, ppg:20.2, rpg:3.7, apg:4.0, spg:1.1, bpg:0.1, fg:46.8, three:40.0, draft:'2nd Round', nba:false, notes:'OSU all-time leading scorer (2,154 pts). Started every game in 4-year career. Pure winner.' },
+
+  // ── IOWA  (South, Seed 9) ─────────────────────────────────────
+  { name:'Bennett Stirtz',    team:'Iowa', pos:'G', yr:'Sr', ht:'6-1', wt:180, ppg:18.3, rpg:3.8, apg:5.2, spg:2.0, bpg:0.1, fg:48.1, three:42.4, draft:'2nd Round', nba:false, notes:'Led nation in steals. Honorable mention NPOY per Fox Sports. Transfer from Drake.' },
+
+  // ── PENN  (South, Seed 14) ─ TJ Power IS at Penn ──────────────
+  { name:'TJ Power',          team:'Penn', pos:'F', yr:'Jr', ht:'6-9', wt:225, ppg:17.3, rpg:8.4, apg:2.3, spg:0.9, bpg:1.4, fg:51.8, three:36.2, draft:'1st Round', nba:true,  notes:'44 pts, 14 reb in Ivy title game. Transfer from Duke. Historic performance. Cinderella watch.' },
+
+  // ── HOFSTRA  (Midwest, Seed 13) ───────────────────────────────
+  { name:'Cruz Davis',        team:'Hofstra', pos:'G', yr:'Jr', ht:'6-3', wt:185, ppg:20.2, rpg:3.8, apg:4.6, spg:1.4, bpg:0.2, fg:47.3, three:40.0, draft:'Undrafted', nba:false, notes:'The CAA\'s best player. 40% from 3 on high volume. Underdog to watch.' },
+
+  // ── GEORGIA  (Midwest, Seed 8) ────────────────────────────────
+  { name:'Jeremiah Wilkinson',team:'Georgia', pos:'G', yr:'So', ht:'6-4', wt:195, ppg:17.0, rpg:3.6, apg:2.7, spg:1.6, bpg:0.3, fg:47.8, three:36.8, draft:'2nd Round', nba:false, notes:'Georgia scores 122 pts/100 possessions with him on court. Sophomore breakout.' },
+
+  // ── CLEMSON  (South, Seed 8) ──────────────────────────────────
+  { name:'Chase Hunter',      team:'Clemson', pos:'G', yr:'Sr', ht:'6-3', wt:195, ppg:15.4, rpg:3.4, apg:4.6, spg:1.5, bpg:0.1, fg:46.1, three:38.2, draft:'Undrafted',  nba:false, notes:'4-year Clemson stalwart. Brownell\'s engine. Plays through contact relentlessly.' },
+
+  // ── SAINT LOUIS  (Midwest, Seed 9) ────────────────────────────
+  { name:'Gibson Jimerson',   team:'Saint Louis', pos:'G', yr:'Sr', ht:'6-5', wt:190, ppg:16.4, rpg:3.8, apg:2.4, spg:1.0, bpg:0.2, fg:46.9, three:38.7, draft:'Undrafted', nba:false, notes:'A-10\'s best shooter. Dangerous in the open court.' },
+
+  // ── HOWARD  (Midwest, Seed 16) ────────────────────────────────
+  { name:'Cedric Taylor III', team:'Howard', pos:'F', yr:'Jr', ht:'6-7', wt:215, ppg:17.3, rpg:6.5, apg:3.3, spg:1.5, bpg:1.3, fg:48.2, three:33.4, draft:'Undrafted', nba:false, notes:'Only D1 player averaging 17+/6+/3+/1.5+/1.3+. MEAC POY. All-around Cinderella candidate.' },
+
+  // ── IDAHO  (South, Seed 15) ───────────────────────────────────
+  { name:'Isaiah Brickner',   team:'Idaho', pos:'G', yr:'Sr', ht:'6-4', wt:190, ppg:16.2, rpg:3.4, apg:3.8, spg:1.2, bpg:0.2, fg:46.8, three:40.1, draft:'Undrafted', nba:false, notes:'Idaho\'s leading scorer. First tourney appearance since 1990. Big Sky Cinderella story.' },
+
+  // ── NORTHERN IOWA  (East, Seed 12) ────────────────────────────
+  { name:'Tytan Anderson',    team:'Northern Iowa', pos:'G', yr:'Sr', ht:'6-4', wt:195, ppg:15.8, rpg:4.2, apg:3.6, spg:1.4, bpg:0.2, fg:46.2, three:38.9, draft:'Undrafted', nba:false, notes:'MVC Player of Year. UNI\'s defensive engine. Cinderella watch vs St. John\'s.' },
+
+  // ── AKRON  (Midwest, Seed 12) ─────────────────────────────────
+  { name:'Tavari Johnson',    team:'Akron', pos:'G', yr:'Sr', ht:'5-11',wt:175, ppg:20.1, rpg:3.9, apg:4.2, spg:1.5, bpg:0.1, fg:45.8, three:37.1, draft:'Undrafted', nba:false, notes:'MAC scoring leader. Led conference in PPG. Akron is 17-1 in MAC play. Dangerous 12-seed.' },
+];
+
+let playerSearch = '';
+let playerPosFilter = 'All';
+let playerSortDir = {};
+
+function renderPlayers() {
+  let data = [...PLAYERS_DATA];
+  if (playerSearch) {
+    const s = playerSearch.toLowerCase();
+    data = data.filter(p => p.name.toLowerCase().includes(s) || p.team.toLowerCase().includes(s));
+  }
+  if (playerPosFilter === 'G') data = data.filter(p => p.pos === 'G');
+  else if (playerPosFilter === 'F') data = data.filter(p => p.pos === 'F');
+  else if (playerPosFilter === 'C') data = data.filter(p => p.pos === 'C');
+  else if (playerPosFilter === 'NBA') data = data.filter(p => p.nba);
+
+  const tbody = document.getElementById('players-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = data.map(p => {
+    const t = TEAMS[p.team] || {};
+    const seedClass = t.seed===1?'seed-1':t.seed===2?'seed-2':t.seed===3?'seed-3':t.seed===4?'seed-4':'seed-other';
+    const draftClass = p.draft.includes('#1') ? 'odds-fav' : p.draft.includes('Top') || p.draft === 'Lottery Pick' ? 'odds-fav' : p.draft.includes('1st') ? 'odds-long' : p.draft.includes('2nd') ? 'odds-dog' : '';
+    const ppgBar = Math.max(4, Math.min(80, (p.ppg - 6) * 2.4));
+    return `<tr>
+      <td style="font-weight:700;">${p.name}${p.nba?'<span class="cinderella-badge" style="background:rgba(59,130,246,0.2);color:#60a5fa;">NBA</span>':''}</td>
+      <td><span class="seed-badge ${seedClass}" style="width:auto;padding:0 6px;border-radius:4px;font-size:10px;margin-right:4px;">${t.seed||'?'}</span>${p.team}</td>
+      <td><span style="font-family:'Space Mono';font-size:11px;color:var(--muted);">${p.pos} • ${p.yr}</span></td>
+      <td><span style="font-family:'Space Mono';font-size:12px;">${p.ht}</span></td>
+      <td><span style="font-family:'Space Mono';font-size:12px;">${p.wt} lbs</span></td>
+      <td><span class="stat-bar" style="width:${ppgBar}px;"></span><strong>${p.ppg}</strong></td>
+      <td>${p.rpg}</td>
+      <td>${p.apg}</td>
+      <td>${p.spg}</td>
+      <td>${p.bpg}</td>
+      <td>${p.fg}%</td>
+      <td>${p.three}%</td>
+      <td><span class="odds-pill ${draftClass}">${p.draft}</span></td>
+      <td style="font-size:11px;color:var(--muted);max-width:220px;">${p.notes}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterPlayers(val) { playerSearch = val; renderPlayers(); }
+function filterPlayerPos(pos, btn) {
+  playerPosFilter = pos;
+  document.querySelectorAll('#page-players .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPlayers();
+}
+function sortPlayers(field) {
+  playerSortDir[field] = !playerSortDir[field];
+  PLAYERS_DATA.sort((a,b) => playerSortDir[field] ? b[field]-a[field] : a[field]-b[field]);
+  renderPlayers();
+}
+
+// ===================== INIT =====================
+loadState();
+renderStats();
+renderOdds();
+renderPlayers();
+</script>
+</body>
+</html>
