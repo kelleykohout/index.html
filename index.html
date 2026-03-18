@@ -1206,8 +1206,8 @@ function renderResultsForm() {
     for (let i = 0; i < 2; i++) allMatchups.push({ key: prefix+'R3_'+i, label: region+' Sweet 16 — Game '+(i+1), round: 3 });
     allMatchups.push({ key: prefix+'R4', label: region+' Elite Eight', round: 4 });
   });
-  allMatchups.push({ key: 'FF_SF1', label: 'Final Four: East vs West', round: 5 });
-  allMatchups.push({ key: 'FF_SF2', label: 'Final Four: Midwest vs South', round: 5 });
+  allMatchups.push({ key: 'FF_SF1', label: 'Final Four: East vs South', round: 5 });
+  allMatchups.push({ key: 'FF_SF2', label: 'Final Four: West vs Midwest', round: 5 });
   allMatchups.push({ key: 'FF_CHAMP', label: '🏆 National Championship', round: 6 });
 
   document.getElementById('results-form').innerHTML = allMatchups.map(m => {
@@ -1389,8 +1389,8 @@ function renderFinalFour(container) {
     return myPicks[p + 'R4'] || null;
   }
 
-  const sf1Key = 'FF_SF1'; // East vs West
-  const sf2Key = 'FF_SF2'; // Midwest vs South
+  const sf1Key = 'FF_SF1'; // East vs South
+  const sf2Key = 'FF_SF2'; // West vs Midwest
   const champKey = 'FF_CHAMP';
 
   const e = getRegionChamp('East');
@@ -1426,15 +1426,15 @@ function renderFinalFour(container) {
         <div>
           <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">EAST CHAMP</div>
           <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(e, sf1Key)}</div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">WEST CHAMP</div>
-          <div class="matchup-teams">${ffTeamRow(w, sf1Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">SOUTH CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(s, sf1Key)}</div>
         </div>
         <div style="font-family:'Bebas Neue';font-size:20px;color:var(--orange);">VS</div>
         <div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">MIDWEST CHAMP</div>
-          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(m, sf2Key)}</div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">SOUTH CHAMP</div>
-          <div class="matchup-teams">${ffTeamRow(s, sf2Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">WEST CHAMP</div>
+          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(w, sf2Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">MIDWEST CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(m, sf2Key)}</div>
         </div>
       </div>
       ${ff1w || ff2w ? `
@@ -1554,15 +1554,10 @@ function buildUpsetMap(bracketPicks) {
   });
 
   // Final Four
-  const ffTeams = ['East','West','Midwest','South'].map(reg => allPicks[reg[0]+'R4'] || null);
-  if (ffTeams[0] && ffTeams[1]) {
-    const r = computeUpsetProb(ffTeams[0], ffTeams[1], 5000);
-    if (r && r.upsetPct >= 0.08) map.set('FF_SF1', r);
-  }
-  if (ffTeams[2] && ffTeams[3]) {
-    const r = computeUpsetProb(ffTeams[2], ffTeams[3], 5000);
-    if (r && r.upsetPct >= 0.08) map.set('FF_SF2', r);
-  }
+  const ffE = allPicks['ER4'] || null, ffS = allPicks['SR4'] || null;
+  const ffW = allPicks['WR4'] || null, ffM = allPicks['MR4'] || null;
+  if (ffE && ffS) { const r = computeUpsetProb(ffE, ffS, 5000); if (r && r.upsetPct >= 0.08) map.set('FF_SF1', r); }
+  if (ffW && ffM) { const r = computeUpsetProb(ffW, ffM, 5000); if (r && r.upsetPct >= 0.08) map.set('FF_SF2', r); }
   const ff1w = allPicks['FF_SF1'], ff2w = allPicks['FF_SF2'];
   if (ff1w && ff2w) {
     const r = computeUpsetProb(ff1w, ff2w, 5000);
@@ -2083,9 +2078,9 @@ function openTeamPanel(teamName, matchupKey) {
       } else if (matchupKey.includes('R4')) {
         const t1=allPicks[p+'R3_0'], t2=allPicks[p+'R3_1']; oppName = t1===teamName?t2:t1;
       } else if (matchupKey==='FF_SF1') {
-        const t1=allPicks['ER4'], t2=allPicks['WR4']; oppName = t1===teamName?t2:t1;
+        const t1=allPicks['ER4'], t2=allPicks['SR4']; oppName = t1===teamName?t2:t1;
       } else if (matchupKey==='FF_SF2') {
-        const t1=allPicks['MR4'], t2=allPicks['SR4']; oppName = t1===teamName?t2:t1;
+        const t1=allPicks['WR4'], t2=allPicks['MR4']; oppName = t1===teamName?t2:t1;
       } else if (matchupKey==='FF_CHAMP') {
         const t1=allPicks['FF_SF1'], t2=allPicks['FF_SF2']; oppName = t1===teamName?t2:t1;
       }
