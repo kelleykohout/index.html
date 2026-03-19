@@ -38,7 +38,7 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 
 /* HERO */
 .hero { background: linear-gradient(160deg, #0D1829 0%, #0A0E1A 60%, #1A0A00 100%); padding: 60px 24px 40px; text-align: center; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,78,0,0.12) 0%, transparent 70%); }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,78,0,0.12) 0%, transparent 70%); pointer-events: none; }
 .hero-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--orange); text-transform: uppercase; margin-bottom: 16px; }
 .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 10vw, 120px); line-height: 0.9; letter-spacing: 2px; background: linear-gradient(160deg, #fff 0%, var(--gold) 60%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
 .hero-sub { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
@@ -144,12 +144,12 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 .teams-table th:hover { color: var(--text); }
 .teams-table td { padding: 10px 14px; border-bottom: 1px solid rgba(42,58,80,0.5); font-size: 13px; vertical-align: middle; }
 .teams-table tr:hover td { background: rgba(255,78,0,0.04); }
-.seed-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-family: 'Space Mono'; font-size: 11px; font-weight: 700; }
-.seed-1 { background: rgba(255,184,0,0.2); color: var(--gold); }
-.seed-2 { background: rgba(59,130,246,0.2); color: var(--blue); }
-.seed-3 { background: rgba(0,196,122,0.2); color: var(--green); }
-.seed-4 { background: rgba(255,78,0,0.2); color: var(--orange); }
-.seed-other { background: rgba(122,143,166,0.2); color: var(--muted); }
+.seed-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-family: 'Space Mono'; font-size: 11px; font-weight: 700; background: rgba(122,143,166,0.15); color: var(--muted); }
+.seed-1 { background: rgba(255,184,0,0.25); color: var(--gold); border: 1px solid rgba(255,184,0,0.4); }
+.seed-2 { background: rgba(255,184,0,0.12); color: var(--gold); }
+.seed-3 { background: rgba(255,184,0,0.08); color: var(--gold); }
+.seed-4 { background: rgba(255,184,0,0.05); color: var(--gold); }
+.seed-other { background: rgba(122,143,166,0.12); color: var(--muted); }
 .odds-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-family: 'Space Mono'; font-size: 11px; }
 .odds-fav { background: rgba(0,196,122,0.15); color: var(--green); }
 .odds-long { background: rgba(122,143,166,0.15); color: var(--muted); }
@@ -203,6 +203,28 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 
 .underdog-badge { font-size: 10px; background: rgba(255,59,92,0.2); color: var(--red); padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
 .cinderella-badge { font-size: 10px; background: rgba(255,184,0,0.2); color: var(--gold); padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+
+/* TEAM POPOVER */
+.team-info-btn { background: rgba(255,184,0,0.12); border: 1px solid rgba(255,184,0,0.4); cursor: pointer; color: var(--gold); font-size: 11px; font-weight: 700; padding: 1px 6px; line-height: 1.5; flex-shrink: 0; border-radius: 4px; transition: all 0.15s; }
+.team-info-btn:hover { background: rgba(255,184,0,0.28); }
+
+/* TEAM INFO SIDE PANEL */
+.team-panel-overlay { display: none; position: fixed; inset: 0; z-index: 300; }
+.team-panel-overlay.open { display: block; }
+.team-panel { position: fixed; top: 64px; right: 0; bottom: 0; width: 320px; background: var(--navy2); border-left: 1px solid var(--border); z-index: 400; transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto; display: flex; flex-direction: column; }
+.team-panel.open { transform: translateX(0); }
+.team-panel-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; background: linear-gradient(135deg, var(--navy2), var(--navy3)); }
+.team-panel-close { background: var(--card); border: 1px solid var(--border); color: var(--muted); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.team-panel-close:hover { color: var(--text); }
+.team-panel-body { padding: 20px; flex: 1; }
+.team-panel-name { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 2px; color: var(--gold); line-height: 1; }
+.team-panel-meta { font-family: 'Space Mono'; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 4px; }
+.team-panel-section { margin-bottom: 20px; }
+.team-panel-label { font-family: 'Space Mono'; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+.team-panel-notes { font-size: 13px; color: var(--text); line-height: 1.65; background: var(--navy3); border-radius: 8px; padding: 12px 14px; border-left: 3px solid var(--orange); }
+.team-panel-stat-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(42,58,80,0.6); font-size: 13px; }
+.team-panel-stat-row:last-child { border-bottom: none; }
+.team-panel-stat-val { font-family: 'Space Mono'; font-size: 12px; color: var(--gold); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -269,11 +291,15 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <!-- STANDINGS PAGE -->
 <div id="page-standings" class="page">
   <div class="section">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
       <div class="section-title" style="margin-bottom:0;">Bracket <span>Standings</span></div>
-      <button class="btn-secondary" onclick="openResultsModal()" style="padding:10px 20px;font-size:13px;border-color:var(--green);color:var(--green);">📋 Enter Results</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="openManageGroupsModal()" style="padding:8px 16px;font-size:13px;">👥 Manage Groups</button>
+        <button class="btn-secondary" onclick="openResultsModal()" style="padding:8px 16px;font-size:13px;border-color:var(--green);color:var(--green);">📋 Enter Results</button>
+      </div>
     </div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">Points scored vs max possible points remaining. Scoring: R1=1 · R2=2 · S16=4 · E8=8 · FF=16 · Champ=32</p>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px;">Points scored vs max possible points remaining. Scoring: R1=1 · R2=2 · S16=4 · E8=8 · FF=16 · Champ=32</p>
+    <div id="standings-group-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;"></div>
     <div id="standings-list"></div>
   </div>
 </div>
@@ -299,6 +325,7 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
     <button class="region-tab" onclick="showRegion('Midwest')">🟡 Midwest</button>
     <button class="region-tab" onclick="showRegion('South')">🔴 South</button>
     <button class="region-tab" onclick="showRegion('FinalFour')">🏆 Final Four</button>
+    <button class="region-tab" onclick="showRegion('Upsets')" style="color:var(--red);">⚡ Upsets</button>
   </div>
   <div class="bracket-container" id="bracket-display"></div>
 </div>
@@ -307,6 +334,10 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <div id="page-stats" class="page">
   <div class="section">
     <div class="section-title">Team <span>Stats</span></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:20px;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;">📖 About the Odds column</div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;">The <strong style="color:var(--text);">Odds</strong> column shows American betting odds from DraftKings Sportsbook (as of Selection Sunday) for each team to win the National Championship. <strong style="color:var(--gold);">Positive odds (+330)</strong> mean a $100 bet wins that amount — higher numbers are bigger underdogs. For example, +330 means roughly a 23% implied chance, while +50000 is a major long shot at under 0.2%. The ⭐ badge marks potential Cinderella teams (seeds 12–16) worth watching for upsets.</p>
+    </div>
     <div class="stats-controls">
       <input type="text" class="search-box" placeholder="Search team..." oninput="filterTeams(this.value)" />
       <button class="filter-btn active" onclick="filterRegion('All',this)">All</button>
@@ -341,7 +372,16 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
 <div id="page-odds" class="page">
   <div class="section">
     <div class="section-title">Championship <span>Odds</span></div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:24px;">DraftKings Sportsbook — Updated at Selection Sunday • Odds to win the 2026 National Championship</p>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;">📖 How to read these odds</div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:8px;">Odds show each team's estimated chance of winning the National Championship, based on <strong style="color:var(--text);">DraftKings Sportsbook</strong> as of Selection Sunday. Displayed as <strong style="color:var(--gold);">American betting odds</strong>.</p>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:8px;"><strong style="color:var(--text);">Positive odds (+330)</strong> show how much you'd win on a $100 bet — so +330 means win $330 on a $100 wager. <strong style="color:var(--text);">Negative odds (-150)</strong> show how much you need to bet to win $100. Higher positive numbers = bigger underdog.</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px;">
+        <div style="font-size:12px;"><span style="color:var(--green);font-weight:700;">+330</span> — Heavy favorite (e.g. Duke, ~23% implied chance)</div>
+        <div style="font-size:12px;"><span style="color:var(--text);font-weight:700;">+5000</span> — Dark horse (~2% implied chance)</div>
+        <div style="font-size:12px;"><span style="color:var(--red);font-weight:700;">+100000</span> — Major long shot (&lt;0.1% chance)</div>
+      </div>
+    </div>
     <div class="odds-grid" id="odds-grid"></div>
   </div>
 </div>
@@ -413,6 +453,11 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
         <option>Seed Multiplier</option>
       </select>
     </div>
+    <div class="form-group">
+      <label class="form-label">Add to Groups</label>
+      <div id="new-bracket-groups" style="background:var(--navy3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;max-height:120px;overflow-y:auto;"></div>
+      <input type="text" class="form-input" id="new-group-name" placeholder="Or type a new group name..." style="font-size:13px;" />
+    </div>
     <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="createBracket()">Create &amp; Start Picking</button>
   </div>
 </div>
@@ -428,6 +473,52 @@ body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans
       <input type="text" class="form-input" id="custom-username" placeholder="Custom name..." />
     </div>
     <button class="btn-primary" style="width:100%;margin-top:8px;" onclick="setUser()">Set Player</button>
+  </div>
+</div>
+
+<!-- TEAM INFO SIDE PANEL -->
+<div class="team-panel-overlay" id="team-panel-overlay" onclick="closeTeamPanel()"></div>
+<div class="team-panel" id="team-panel">
+  <div class="team-panel-header">
+    <div>
+      <div class="team-panel-name" id="tp-name">Team</div>
+      <div class="team-panel-meta" id="tp-meta"></div>
+    </div>
+    <button class="team-panel-close" onclick="closeTeamPanel()">✕</button>
+  </div>
+  <div class="team-panel-body">
+    <div class="team-panel-section">
+      <div class="team-panel-label">Scouting Report</div>
+      <div class="team-panel-notes" id="tp-notes"></div>
+    </div>
+    <div class="team-panel-section" id="tp-upset-section">
+      <div id="tp-upset"></div>
+    </div>
+    <div class="team-panel-section">
+      <div class="team-panel-label">Advance Probability <span style="font-size:9px;color:var(--muted);font-family:'Space Mono';">(Monte Carlo model)</span></div>
+      <div id="tp-advance"></div>
+    </div>
+    <div class="team-panel-section">
+      <div class="team-panel-label">Team Stats</div>
+      <div id="tp-stats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE GROUPS MODAL -->
+<div class="modal-overlay" id="groups-modal">
+  <div class="modal" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('groups-modal')">✕</button>
+    <div class="modal-title">👥 Manage Groups</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Create groups and assign brackets to them. Anyone can join a group when creating a bracket.</p>
+    <div class="form-group">
+      <label class="form-label">Create New Group</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" class="form-input" id="manage-group-name" placeholder="Group name..." style="flex:1;" />
+        <button class="btn-primary" onclick="createGroup()" style="padding:10px 18px;white-space:nowrap;">Add</button>
+      </div>
+    </div>
+    <div id="groups-manage-list" style="margin-top:8px;"></div>
   </div>
 </div>
 
@@ -585,6 +676,7 @@ const REGIONS = {
 // ===================== STATE =====================
 let currentUser = 'Guest';
 let brackets = [];
+let groups = []; // { id, name }
 let activeBracket = null;
 let currentRegion = 'East';
 let picks = {};
@@ -599,6 +691,7 @@ function loadState() {
     picks = s.picks || {};
     currentUser = s.currentUser || 'Guest';
     results = s.results || {};
+    groups = s.groups || [];
     document.getElementById('username-display').textContent = currentUser;
     renderLobbyCards();
     renderLeaderboard();
@@ -606,7 +699,7 @@ function loadState() {
 }
 
 function saveState() {
-  localStorage.setItem('mm2026', JSON.stringify({ brackets, picks, currentUser, results }));
+  localStorage.setItem('mm2026', JSON.stringify({ brackets, picks, currentUser, results, groups }));
 }
 
 // ===================== PAGES =====================
@@ -630,6 +723,13 @@ function showPage(name) {
 // ===================== MODALS =====================
 function openCreateModal() {
   document.getElementById('new-bracket-user').value = currentUser !== 'Guest' ? currentUser : '';
+  document.getElementById('new-group-name').value = '';
+  const gc = document.getElementById('new-bracket-groups');
+  gc.innerHTML = groups.length === 0
+    ? '<div style="color:var(--muted);font-size:12px;">No groups yet — type a name below to create one</div>'
+    : groups.map(g => `<label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:4px 0;">
+        <input type="checkbox" value="${g.id}" style="accent-color:var(--orange);width:14px;height:14px;"> ${g.name}
+      </label>`).join('');
   document.getElementById('create-modal').classList.add('open');
 }
 function openUserModal() {
@@ -664,7 +764,14 @@ function createBracket() {
   currentUser = user;
   document.getElementById('username-display').textContent = user;
   const id = 'b' + Date.now();
-  const b = { id, name, user, scoring: document.getElementById('new-bracket-scoring').value, created: new Date().toLocaleDateString(), picks: {}, score: 0 };
+  const selectedGroups = [...document.querySelectorAll('#new-bracket-groups input[type=checkbox]:checked')].map(cb => cb.value);
+  const newGroupName = document.getElementById('new-group-name').value.trim();
+  if (newGroupName) {
+    const existing = groups.find(g => g.name.toLowerCase() === newGroupName.toLowerCase());
+    if (!existing) { const gid = 'g' + Date.now(); groups.push({ id: gid, name: newGroupName }); selectedGroups.push(gid); }
+    else { if (!selectedGroups.includes(existing.id)) selectedGroups.push(existing.id); }
+  }
+  const b = { id, name, user, scoring: document.getElementById('new-bracket-scoring').value, created: new Date().toLocaleDateString(), picks: {}, score: 0, groups: selectedGroups };
   brackets.push(b);
   activeBracket = b;
   picks[id] = {};
@@ -794,20 +901,40 @@ function calcMaxPossible(bracketId) {
   return max;
 }
 
+// current group filter for standings ('all' or group id)
+let activeStandingsGroup = 'all';
+
 function renderStandings() {
   const container = document.getElementById('standings-list');
+  const tabsEl = document.getElementById('standings-group-tabs');
   if (!container) return;
-  if (!brackets.length) {
+
+  // ── Group tabs ──
+  if (tabsEl) {
+    const tabStyle = (active) => `padding:7px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid ${active?'var(--orange)':'var(--border)'};background:${active?'var(--orange)':'transparent'};color:${active?'white':'var(--muted)'};transition:all 0.2s;`;
+    const tabs = [{ id:'all', name:'🌐 Overall' }, ...groups.map(g => ({ id:g.id, name:'👥 '+g.name }))];
+    tabsEl.innerHTML = tabs.map(t =>
+      `<button style="${tabStyle(activeStandingsGroup===t.id)}" onclick="setStandingsGroup('${t.id}')">${t.name}</button>`
+    ).join('');
+  }
+
+  // ── Filter brackets by group ──
+  const filtered = activeStandingsGroup === 'all'
+    ? brackets
+    : brackets.filter(b => (b.groups||[]).includes(activeStandingsGroup));
+
+  if (!filtered.length) {
+    const groupName = activeStandingsGroup === 'all' ? '' : (groups.find(g=>g.id===activeStandingsGroup)||{}).name||'';
     container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--muted);">
-      <div style="font-size:48px;margin-bottom:16px;">🏆</div>
-      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">No brackets yet</div>
-      <button class="btn-primary" onclick="openCreateModal()" style="margin-top:8px;">+ Create Bracket</button>
+      <div style="font-size:48px;margin-bottom:16px;">👥</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">${activeStandingsGroup==='all'?'No brackets yet':'No brackets in this group'}</div>
+      <div style="font-size:13px;margin-bottom:20px;">${activeStandingsGroup==='all'?'Create a bracket to get started.':'Add brackets to <strong>'+groupName+'</strong> when creating or editing them.'}</div>
+      <button class="btn-primary" onclick="openCreateModal()">+ Create Bracket</button>
     </div>`;
     return;
   }
 
-  // Sort by score desc, then max possible desc
-  const ranked = [...brackets].map(b => ({
+  const ranked = filtered.map(b => ({
     ...b,
     score: calcScore(b.id),
     maxPossible: calcMaxPossible(b.id),
@@ -816,13 +943,12 @@ function renderStandings() {
   })).sort((a,b) => b.score - a.score || b.maxPossible - a.maxPossible);
 
   const gamesPlayed = Object.keys(results).length;
-  const totalGames = 67;
+  const groupName = activeStandingsGroup === 'all' ? 'Overall' : (groups.find(g=>g.id===activeStandingsGroup)||{}).name||'Group';
 
   container.innerHTML = `
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
-        <div style="font-size:13px;color:var(--muted);">Games with results entered: <span style="color:var(--gold);font-weight:700;">${gamesPlayed}</span> of ${totalGames}</div>
-        <div style="font-size:13px;color:var(--muted);">Brackets competing: <span style="color:var(--gold);font-weight:700;">${brackets.length}</span></div>
+      <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--muted);">📊 <strong style="color:var(--text);">${groupName}</strong> · ${ranked.length} bracket${ranked.length!==1?'s':''} · ${gamesPlayed} games played</div>
       </div>
       <table style="width:100%;border-collapse:collapse;">
         <thead>
@@ -830,42 +956,48 @@ function renderStandings() {
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Rank</th>
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Bracket</th>
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Owner</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:left;">Groups</th>
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Score</th>
-            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Max Possible</th>
+            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Max</th>
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Correct</th>
-            <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;">Status</th>
             <th style="font-family:'Space Mono';font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:12px 16px;text-align:center;"></th>
           </tr>
         </thead>
         <tbody>
           ${ranked.map((b, i) => {
             const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-            const statusIcon = b.locked ? '🔒' : b.numPicks > 0 ? '💾' : '📝';
-            const statusLabel = b.locked ? 'Locked' : b.numPicks > 0 ? 'Saved' : 'Draft';
-            const pctBar = b.maxPossible > 0 ? Math.round((b.score / b.maxPossible) * 100) : 0;
-            return `<tr style="border-bottom:1px solid var(--border);${i===0?'background:rgba(255,184,0,0.05);':''}">
+            const statusIcon = b.locked?'🔒':b.numPicks>0?'💾':'📝';
+            const pctBar = b.maxPossible>0?Math.round((b.score/b.maxPossible)*100):0;
+            const bGroups = (b.groups||[]).map(gid => {
+              const g = groups.find(x=>x.id===gid);
+              return g ? `<span style="background:rgba(255,78,0,0.12);color:var(--orange);font-size:10px;padding:1px 7px;border-radius:10px;white-space:nowrap;">${g.name}</span>` : '';
+            }).join(' ');
+            return `<tr style="border-bottom:1px solid var(--border);${i===0?'background:rgba(255,184,0,0.04);':''}">
               <td style="padding:14px 16px;font-family:'Bebas Neue';font-size:22px;color:var(--muted);">${medal||'#'+(i+1)}</td>
               <td style="padding:14px 16px;">
                 <div style="font-weight:700;font-size:14px;">${b.name}</div>
-                <div style="font-size:11px;color:var(--muted);margin-top:2px;">${b.scoring}</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px;">${statusIcon} ${b.locked?'Locked':b.numPicks>0?'Saved':'Draft'} · ${b.scoring}</div>
               </td>
               <td style="padding:14px 16px;font-size:13px;">${b.user}</td>
+              <td style="padding:14px 16px;max-width:160px;">
+                <div style="display:flex;gap:4px;flex-wrap:wrap;">${bGroups||'<span style="color:var(--muted);font-size:11px;">—</span>'}</div>
+                <button onclick="openEditGroupsModal('${b.id}')" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;padding:2px 0;margin-top:4px;">+ Edit groups</button>
+              </td>
               <td style="padding:14px 16px;text-align:center;">
                 <div style="font-family:'Bebas Neue';font-size:28px;color:var(--gold);">${b.score}</div>
                 <div style="font-size:10px;color:var(--muted);">pts</div>
               </td>
               <td style="padding:14px 16px;text-align:center;">
                 <div style="font-family:'Bebas Neue';font-size:24px;color:var(--blue);">${b.maxPossible}</div>
-                <div style="margin-top:4px;height:4px;background:var(--border);border-radius:2px;width:80px;margin-left:auto;margin-right:auto;">
-                  <div style="height:4px;background:var(--blue);border-radius:2px;width:${pctBar}%;"></div>
+                <div style="height:3px;background:var(--border);border-radius:2px;width:60px;margin:3px auto;">
+                  <div style="height:3px;background:var(--blue);border-radius:2px;width:${pctBar}%;"></div>
                 </div>
-                <div style="font-size:10px;color:var(--muted);margin-top:2px;">${pctBar}% of max</div>
+                <div style="font-size:10px;color:var(--muted);">${pctBar}%</div>
               </td>
               <td style="padding:14px 16px;text-align:center;">
                 <div style="font-family:'Bebas Neue';font-size:24px;color:var(--green);">${b.numCorrect}</div>
                 <div style="font-size:10px;color:var(--muted);">of ${b.numPicks}</div>
               </td>
-              <td style="padding:14px 16px;text-align:center;font-size:12px;">${statusIcon} ${statusLabel}</td>
               <td style="padding:14px 16px;text-align:center;">
                 <button onclick="loadBracket('${b.id}')" style="background:var(--navy3);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;">View</button>
               </td>
@@ -875,6 +1007,103 @@ function renderStandings() {
       </table>
     </div>`;
 }
+
+function setStandingsGroup(groupId) {
+  activeStandingsGroup = groupId;
+  renderStandings();
+}
+
+// ===================== GROUP MANAGEMENT =====================
+function openManageGroupsModal() {
+  renderGroupsManageList();
+  document.getElementById('manage-group-name').value = '';
+  document.getElementById('groups-modal').classList.add('open');
+}
+
+function renderGroupsManageList() {
+  const el = document.getElementById('groups-manage-list');
+  if (!el) return;
+  if (!groups.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0;">No groups yet. Create one above.</div>';
+    return;
+  }
+  el.innerHTML = groups.map(g => {
+    const count = brackets.filter(b => (b.groups||[]).includes(g.id)).length;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-weight:700;font-size:14px;">👥 ${g.name}</div>
+        <div style="font-size:12px;color:var(--muted);">${count} bracket${count!==1?'s':''}</div>
+      </div>
+      <button onclick="deleteGroup('${g.id}')" style="background:none;border:1px solid var(--border);color:var(--red);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;">Delete</button>
+    </div>`;
+  }).join('');
+}
+
+function createGroup() {
+  const name = document.getElementById('manage-group-name').value.trim();
+  if (!name) return;
+  if (groups.find(g => g.name.toLowerCase() === name.toLowerCase())) {
+    showToast('⚠️ Group "' + name + '" already exists');
+    return;
+  }
+  groups.push({ id: 'g' + Date.now(), name });
+  document.getElementById('manage-group-name').value = '';
+  saveState();
+  renderGroupsManageList();
+  renderStandings();
+  showToast('✅ Group "' + name + '" created!');
+}
+
+function deleteGroup(gid) {
+  if (!confirm('Delete this group? Brackets will remain but won\'t be in this group.')) return;
+  groups = groups.filter(g => g.id !== gid);
+  brackets.forEach(b => { b.groups = (b.groups||[]).filter(id => id !== gid); });
+  if (activeStandingsGroup === gid) activeStandingsGroup = 'all';
+  saveState();
+  renderGroupsManageList();
+  renderStandings();
+  showToast('🗑️ Group deleted.');
+}
+
+function openEditGroupsModal(bracketId) {
+  const b = brackets.find(x => x.id === bracketId);
+  if (!b) return;
+  if (!groups.length) {
+    showToast('⚠️ No groups yet — create one in Manage Groups first');
+    return;
+  }
+  // Build a quick inline modal
+  const existing = document.getElementById('edit-groups-modal');
+  if (existing) existing.remove();
+  const bGroups = b.groups || [];
+  const modalHtml = `<div class="modal-overlay open" id="edit-groups-modal" onclick="if(event.target===this)this.remove()">
+    <div class="modal" style="max-width:400px;">
+      <button class="modal-close" onclick="document.getElementById('edit-groups-modal').remove()">✕</button>
+      <div class="modal-title" style="font-size:20px;">Edit Groups</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">Bracket: <strong style="color:var(--text);">${b.name}</strong></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+        ${groups.map(g => `<label style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;padding:8px 12px;background:var(--navy3);border-radius:8px;">
+          <input type="checkbox" value="${g.id}" ${bGroups.includes(g.id)?'checked':''} style="accent-color:var(--orange);width:16px;height:16px;flex-shrink:0;">
+          <span>👥 ${g.name}</span>
+        </label>`).join('')}
+      </div>
+      <button class="btn-primary" style="width:100%;" onclick="saveEditGroups('${bracketId}')">Save Changes</button>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function saveEditGroups(bracketId) {
+  const b = brackets.find(x => x.id === bracketId);
+  if (!b) return;
+  const checked = [...document.querySelectorAll('#edit-groups-modal input[type=checkbox]:checked')].map(cb => cb.value);
+  b.groups = checked;
+  saveState();
+  document.getElementById('edit-groups-modal').remove();
+  renderStandings();
+  showToast('✅ Groups updated!');
+}
+
 
 // ===================== BRACKET =====================
 function showRegion(region) {
@@ -977,8 +1206,8 @@ function renderResultsForm() {
     for (let i = 0; i < 2; i++) allMatchups.push({ key: prefix+'R3_'+i, label: region+' Sweet 16 — Game '+(i+1), round: 3 });
     allMatchups.push({ key: prefix+'R4', label: region+' Elite Eight', round: 4 });
   });
-  allMatchups.push({ key: 'FF_SF1', label: 'Final Four: East vs West', round: 5 });
-  allMatchups.push({ key: 'FF_SF2', label: 'Final Four: Midwest vs South', round: 5 });
+  allMatchups.push({ key: 'FF_SF1', label: 'Final Four: East vs South', round: 5 });
+  allMatchups.push({ key: 'FF_SF2', label: 'Final Four: West vs Midwest', round: 5 });
   allMatchups.push({ key: 'FF_CHAMP', label: '🏆 National Championship', round: 6 });
 
   document.getElementById('results-form').innerHTML = allMatchups.map(m => {
@@ -1014,9 +1243,11 @@ function closeResultsModal() {
 function renderBracket(region) {
   const container = document.getElementById('bracket-display');
   if (region === 'FinalFour') { renderFinalFour(container); return; }
+  if (region === 'Upsets') { renderUpsets(container); return; }
   const matchups = REGIONS[region];
   if (!matchups) return;
   const myPicks = getPicks();
+  const upsetMap = buildUpsetMap(myPicks);
 
   // Build rounds structure
   // Round 1: 8 matchups
@@ -1063,14 +1294,27 @@ function renderBracket(region) {
     const t = TEAMS[name] || {};
     const seed = t.seed || '?';
     const seedClass = seed===1?'seed-1':seed===2?'seed-2':seed===3?'seed-3':seed===4?'seed-4':'seed-other';
-    const isUnderdog = seed >= 10;
     const pickedThis = getPicks()[matchupKey] === name;
-    return `<div class="team-row ${pickedThis?'winner':''}" onclick="makePick('${matchupKey}','${name.replace(/'/g,"\\'")}')">
-      <span class="seed-badge ${seedClass}">${seed}</span>
-      <span class="team-name">${name}${isUnderdog?'<span class="underdog-badge">DOG</span>':''}</span>
-      <span class="team-score" style="font-size:10px;color:var(--muted);">${t.odds||''}</span>
-      ${pickedThis?'<span class="win-check">✓</span>':''}
-    </div>`;
+    const actualWinner = results[matchupKey];
+    const isCorrect = pickedThis && actualWinner && actualWinner === name;
+    const isWrong = pickedThis && actualWinner && actualWinner !== name;
+    const pts = ROUND_POINTS[getRoundNumber(matchupKey)] || 1;
+    const locked = activeBracket && activeBracket.locked;
+    let rowStyle = '';
+    let indicator = '';
+    if (isCorrect) { rowStyle = 'background:rgba(0,196,122,0.15);border-left:3px solid var(--green);'; indicator = `<span style="color:var(--green);font-weight:700;font-size:11px;">+${pts}pts</span>`; }
+    else if (isWrong) { rowStyle = 'background:rgba(255,59,92,0.1);border-left:3px solid var(--red);opacity:0.7;'; indicator = '<span style="color:var(--red);font-size:11px;">&#10007;</span>'; }
+    const oddsDisplay = locked ? 'Locked' : (t.odds ? americanToRatio(t.odds) : '');
+    const safeName = name.replace(/'/g, "\\'");
+    const safeKey = matchupKey.replace(/'/g, "\\'");
+    const infoBtn = t.notes ? `<button class="team-info-btn" onclick="event.stopPropagation();openTeamPanel('${safeName}','${safeKey}')">i</button>` : '';
+    return `<div class="team-row ${pickedThis?'winner':''}" style="${rowStyle}" onclick="makePick('${matchupKey}','${safeName}')">`
+      + `<span class="seed-badge ${seedClass}">${seed}</span>`
+      + `<span class="team-name">${name}</span>`
+      + infoBtn
+      + `<span class="team-score" style="font-size:10px;color:var(--muted);">${oddsDisplay}</span>`
+      + indicator
+      + `</div>`;
   }
 
   function matchupHtml(teams, key, extraTop, extraBot) {
@@ -1145,8 +1389,8 @@ function renderFinalFour(container) {
     return myPicks[p + 'R4'] || null;
   }
 
-  const sf1Key = 'FF_SF1'; // East vs West
-  const sf2Key = 'FF_SF2'; // Midwest vs South
+  const sf1Key = 'FF_SF1'; // East vs South
+  const sf2Key = 'FF_SF2'; // West vs Midwest
   const champKey = 'FF_CHAMP';
 
   const e = getRegionChamp('East');
@@ -1161,10 +1405,13 @@ function renderFinalFour(container) {
     if (!name) return `<div class="team-row" style="opacity:0.3;"><span class="team-name" style="font-size:13px;">TBD — Pick regional winners first</span></div>`;
     const t = TEAMS[name] || {};
     const picked = myPicks[key] === name;
-    return `<div class="team-row ${picked?'winner':''}" onclick="makePick('${key}','${name.replace(/'/g,"\\'")}')">
+    const safeFfName = name.replace(/'/g, "\\'");
+    const ffInfoBtn = t.notes ? `<button class="team-info-btn" onclick="event.stopPropagation();openTeamPanel('${safeFfName}','${key}')">i</button>` : '';
+    return `<div class="team-row ${picked?'winner':''}" onclick="makePick('${key}','${safeFfName}')">
       <span class="seed-badge seed-${Math.min(t.seed,4)<=4?t.seed:'other'}">${t.seed||'?'}</span>
       <span class="team-name" style="font-size:14px;font-weight:700;">${name}</span>
-      <span style="font-size:11px;color:var(--muted);">${t.odds||''}</span>
+      ${ffInfoBtn}
+      <span style="font-size:11px;color:var(--muted);">${t.odds ? americanToRatio(t.odds) : ''}</span>
       ${picked?'<span class="win-check" style="font-size:14px;">✓</span>':''}
     </div>`;
   }
@@ -1179,15 +1426,15 @@ function renderFinalFour(container) {
         <div>
           <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">EAST CHAMP</div>
           <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(e, sf1Key)}</div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">WEST CHAMP</div>
-          <div class="matchup-teams">${ffTeamRow(w, sf1Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">SOUTH CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(s, sf1Key)}</div>
         </div>
         <div style="font-family:'Bebas Neue';font-size:20px;color:var(--orange);">VS</div>
         <div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">MIDWEST CHAMP</div>
-          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(m, sf2Key)}</div>
-          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">SOUTH CHAMP</div>
-          <div class="matchup-teams">${ffTeamRow(s, sf2Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">WEST CHAMP</div>
+          <div class="matchup-teams" style="margin-bottom:4px;">${ffTeamRow(w, sf2Key)}</div>
+          <div style="font-family:'Space Mono';font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;margin-top:12px;">MIDWEST CHAMP</div>
+          <div class="matchup-teams">${ffTeamRow(m, sf2Key)}</div>
         </div>
       </div>
       ${ff1w || ff2w ? `
@@ -1198,6 +1445,218 @@ function renderFinalFour(container) {
       </div>` : `<div style="text-align:center;color:var(--muted);padding:40px;border:1px dashed var(--border);border-radius:12px;">Complete all four regions to unlock the Final Four picks</div>`}
     </div>`;
 }
+
+// ===================== UPSETS =====================
+
+// ===================== MONTE CARLO MODEL (shared) =====================
+const MC_HIST = {
+  1: { 16:0.017, 8:0.32, 9:0.32 },
+  2: { 15:0.060, 7:0.40, 10:0.28 },
+  3: { 14:0.085, 6:0.40, 11:0.36 },
+  4: { 13:0.130, 5:0.44, 12:0.35 },
+  5: { 12:0.350 },
+  6: { 11:0.370 },
+  7: { 10:0.390 },
+  8: { 9:0.490  },
+};
+
+function mcHistBase(seedFav, seedDog) {
+  if (MC_HIST[seedFav] && MC_HIST[seedFav][seedDog] !== undefined) return MC_HIST[seedFav][seedDog];
+  const gap = seedDog - seedFav;
+  return Math.max(0.02, 0.50 - gap * 0.045);
+}
+
+function mcStrength(t) {
+  const margin  = (t.ppg||70) - (t.oppg||70);
+  const fgB     = ((t.fg||44) - 44) * 1.5;
+  const threeB  = ((t.three||34) - 34) * 0.8;
+  const wins    = t.record ? parseInt(t.record.split('-')[0]) : 15;
+  const losses  = t.record ? parseInt(t.record.split('-')[1]) : 15;
+  const winB    = (wins / Math.max(1, wins+losses) - 0.5) * 20;
+  return 50 + margin*1.2 + fgB + threeB + winB;
+}
+
+function mcInjury(t) {
+  if (!t.notes) return 0;
+  if (t.notes.includes('OUT FOR TOURNAMENT')) return 12;
+  if (t.notes.includes('QUESTIONABLE')) return 5;
+  if (t.notes.includes('⚠️')) return 4;
+  return 0;
+}
+
+// Returns { upsetPct, fav, dog, seedFav, seedDog } or null if no meaningful upset chance
+function computeUpsetProb(teamA, teamB, sims) {
+  sims = sims || 5000;
+  const tA = TEAMS[teamA] || {}, tB = TEAMS[teamB] || {};
+  const sA = tA.seed || 8, sB = tB.seed || 8;
+  if (!teamA || !teamB || sA === sB) return null;
+  const [fav, dog, tFav, tDog, seedFav, seedDog] =
+    sA <= sB ? [teamA,teamB,tA,tB,sA,sB] : [teamB,teamA,tB,tA,sB,sA];
+  const histBase = mcHistBase(seedFav, seedDog);
+  const strFav = mcStrength(tFav) - mcInjury(tFav);
+  const strDog = mcStrength(tDog);
+  let dogWins = 0;
+  const noise = () => (Math.random()+Math.random()+Math.random()-1.5)*8;
+  for (let i = 0; i < sims; i++) {
+    const p = histBase*0.4 + (strDog+noise() > strFav+noise() ? 0.6 : 0);
+    if (Math.random() < p) dogWins++;
+  }
+  return { fav, dog, tFav, tDog, seedFav, seedDog,
+           seedGap: seedDog-seedFav,
+           upsetPct: dogWins/sims,
+           hasInjury: mcInjury(tFav) > 0,
+           hasCinderella: seedDog >= 12 };
+}
+
+// Pre-compute upset probs for all bracket matchups (R1 + later rounds from picks)
+// Returns a Map: matchupKey -> upsetResult
+function buildUpsetMap(bracketPicks) {
+  const map = new Map();
+  const allPicks = bracketPicks || {};
+
+  // R1 — use REGIONS data
+  Object.entries(REGIONS).forEach(([region, matchups]) => {
+    matchups.forEach(m => {
+      const r = computeUpsetProb(m.teams[0], m.teams[1], 5000);
+      if (r && r.upsetPct >= 0.08) map.set(m.id, r);
+    });
+  });
+
+  // R2+ — use picks to determine who faces who
+  ['East','West','Midwest','South'].forEach(region => {
+    const p = region[0];
+    // R2: winners of R1 pairs face each other
+    const r2pairs = [[0,1],[2,3],[4,5],[6,7]];
+    r2pairs.forEach((pair, i) => {
+      const t1 = allPicks[p+(pair[0]+1)] || null;
+      const t2 = allPicks[p+(pair[1]+1)] || null;
+      if (t1 && t2) {
+        const r = computeUpsetProb(t1, t2, 5000);
+        if (r && r.upsetPct >= 0.08) map.set(p+'R2_'+i, r);
+      }
+    });
+    // R3 (Sweet 16): winners of R2 pairs
+    [[0,1],[2,3]].forEach((pair, i) => {
+      const t1 = allPicks[p+'R2_'+pair[0]] || null;
+      const t2 = allPicks[p+'R2_'+pair[1]] || null;
+      if (t1 && t2) {
+        const r = computeUpsetProb(t1, t2, 5000);
+        if (r && r.upsetPct >= 0.08) map.set(p+'R3_'+i, r);
+      }
+    });
+    // R4 (Elite 8)
+    const t1 = allPicks[p+'R3_0'] || null;
+    const t2 = allPicks[p+'R3_1'] || null;
+    if (t1 && t2) {
+      const r = computeUpsetProb(t1, t2, 5000);
+      if (r && r.upsetPct >= 0.08) map.set(p+'R4', r);
+    }
+  });
+
+  // Final Four
+  const ffE = allPicks['ER4'] || null, ffS = allPicks['SR4'] || null;
+  const ffW = allPicks['WR4'] || null, ffM = allPicks['MR4'] || null;
+  if (ffE && ffS) { const r = computeUpsetProb(ffE, ffS, 5000); if (r && r.upsetPct >= 0.08) map.set('FF_SF1', r); }
+  if (ffW && ffM) { const r = computeUpsetProb(ffW, ffM, 5000); if (r && r.upsetPct >= 0.08) map.set('FF_SF2', r); }
+  const ff1w = allPicks['FF_SF1'], ff2w = allPicks['FF_SF2'];
+  if (ff1w && ff2w) {
+    const r = computeUpsetProb(ff1w, ff2w, 5000);
+    if (r && r.upsetPct >= 0.08) map.set('FF_CHAMP', r);
+  }
+
+  return map;
+}
+
+// Badge HTML for use in teamRow
+function upsetBadge(upsetPct) {
+  if (!upsetPct || upsetPct < 0.08) return '';
+  const pct = Math.round(upsetPct * 100);
+  const color = upsetPct >= 0.35 ? 'var(--red)' : upsetPct >= 0.22 ? 'var(--orange)' : 'var(--gold)';
+  const flame = upsetPct >= 0.35 ? '🔥🔥' : upsetPct >= 0.22 ? '🔥' : '⚡';
+  return `<span style="background:rgba(255,78,0,0.12);border:1px solid ${color};color:${color};font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;flex-shrink:0;white-space:nowrap;">${flame}${pct}%</span>`;
+}
+
+function renderUpsets(container) {
+  const allPicks = activeBracket ? (picks[activeBracket.id] || {}) : {};
+  const upsetMap = buildUpsetMap(allPicks);
+  const entries = [...upsetMap.entries()]
+    .map(([key, r]) => ({ ...r, matchupId: key, round: getRoundNumber(key) }))
+    .sort((a, b) => b.upsetPct - a.upsetPct);
+
+  function pctBar(pct, color) {
+    const w = Math.round(pct * 100);
+    return `<div style="height:6px;background:var(--border);border-radius:3px;margin-top:4px;"><div style="height:6px;background:${color};border-radius:3px;width:${w}%;"></div></div>`;
+  }
+  function alertLevel(pct) {
+    if (pct >= 0.35) return { label:'🔥🔥🔥 High Upset Alert', color:'var(--red)' };
+    if (pct >= 0.22) return { label:'🔥🔥 Real Upset Threat',  color:'var(--orange)' };
+    if (pct >= 0.12) return { label:'🔥 Worth Watching',       color:'var(--gold)' };
+    return               { label:'👀 Slight Chance',            color:'var(--muted)' };
+  }
+  function sc(s) { return s===1?'seed-1':s===2?'seed-2':s===3?'seed-3':s===4?'seed-4':'seed-other'; }
+  const roundName = r => ['','Round of 64','Round of 32','Sweet 16','Elite Eight','Final Four','Championship'][r] || '';
+
+  container.innerHTML = `<div style="max-width:900px;padding:24px;">
+    <div style="margin-bottom:8px;"><div style="font-family:'Bebas Neue';font-size:36px;letter-spacing:2px;background:linear-gradient(90deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">⚡ Upset Watch</div></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:var(--muted);line-height:1.6;">
+      <strong style="color:var(--text);">How this works:</strong> Each matchup runs <strong style="color:var(--gold);">5,000 simulated games</strong> using historical seed win rates (1985–2024), scoring margin, FG%, win % and injury status.
+      <strong style="color:var(--text);">R2+ matchups</strong> use your current bracket picks to determine who faces who.
+      Only games with ≥8% upset probability shown. 1v16 excluded (~2% historically).
+    </div>
+    ${entries.length === 0 ?
+      `<div style="color:var(--muted);text-align:center;padding:60px 20px;">
+        <div style="font-size:32px;margin-bottom:12px;">🏀</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">No significant upset threats found</div>
+        <div style="font-size:13px;">Make picks in your bracket to see later-round upset predictions.</div>
+      </div>` :
+      entries.map(c => {
+        const al = alertLevel(c.upsetPct);
+        const favPct = Math.round((1 - c.upsetPct)*100);
+        const dogPct = Math.round(c.upsetPct*100);
+        const tags = [];
+        if (c.hasInjury) tags.push(`<span style="background:rgba(255,59,92,0.15);color:var(--red);font-size:10px;padding:2px 8px;border-radius:4px;">⚠️ FAV INJURED</span>`);
+        if (c.hasCinderella) tags.push(`<span style="background:rgba(255,184,0,0.12);color:var(--gold);font-size:10px;padding:2px 8px;border-radius:4px;">⭐ CINDERELLA</span>`);
+        tags.push(`<span style="background:var(--navy3);color:var(--muted);font-size:10px;padding:2px 8px;border-radius:4px;">${roundName(c.round)}</span>`);
+        return `<div style="background:var(--card);border:1px solid var(--border);border-left:4px solid ${al.color};border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:700;color:${al.color};">${al.label}</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">${tags.join('')}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 80px 1fr;gap:16px;align-items:start;margin-bottom:14px;">
+            <div>
+              <div style="font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:6px;">FAVORITE</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="seed-badge ${sc(c.seedFav)}" style="width:auto;padding:0 6px;border-radius:4px;font-size:10px;flex-shrink:0;">${c.seedFav}</span>
+                <button style="background:none;border:none;color:var(--text);font-weight:700;font-size:13px;cursor:pointer;padding:0;text-align:left;" onclick="openTeamPanel('${c.fav.replace(/'/g,"\\'")}');">${c.fav}</button>
+              </div>
+              <div style="font-size:12px;font-weight:700;margin-bottom:2px;">${favPct}% win prob</div>
+              ${pctBar(favPct/100,'var(--blue)')}
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Margin: +${((c.tFav.ppg||70)-(c.tFav.oppg||70)).toFixed(1)} · FG: ${c.tFav.fg||'—'}%${c.hasInjury?' · ⚠️':''}</div>
+            </div>
+            <div style="text-align:center;padding-top:16px;">
+              <div style="font-family:'Bebas Neue';font-size:20px;color:var(--orange);">VS</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:2px;">+${c.seedGap} seeds</div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:${al.color};letter-spacing:1px;margin-bottom:6px;font-weight:700;">UNDERDOG</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="seed-badge seed-other" style="width:auto;padding:0 6px;border-radius:4px;font-size:10px;flex-shrink:0;">${c.seedDog}</span>
+                <button style="background:none;border:none;color:var(--text);font-weight:700;font-size:13px;cursor:pointer;padding:0;text-align:left;" onclick="openTeamPanel('${c.dog.replace(/'/g,"\\'")}');">${c.dog}</button>
+              </div>
+              <div style="font-size:12px;color:${al.color};font-weight:700;margin-bottom:2px;">${dogPct}% upset chance</div>
+              ${pctBar(c.upsetPct, al.color)}
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Margin: +${((c.tDog.ppg||70)-(c.tDog.oppg||70)).toFixed(1)} · FG: ${c.tDog.fg||'—'}%</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;line-height:1.5;">
+            💡 <em>${c.tDog.notes ? c.tDog.notes.substring(0,140)+(c.tDog.notes.length>140?'…':'') : ''}</em>
+          </div>
+        </div>`;
+      }).join('')
+    }
+  </div>`;
+}
+
 
 // ===================== STATS =====================
 function renderStats() {
@@ -1217,14 +1676,14 @@ function renderStats() {
     const isCinderella = t.seed >= 12;
     return `<tr>
       <td><span class="seed-badge ${seedClass}">${t.seed}</span></td>
-      <td style="font-weight:600;">${name}${isUnderdog?`<span class="underdog-badge">DOG</span>`:''}${isCinderella?`<span class="cinderella-badge">⭐</span>`:''}</td>
+      <td style="font-weight:600;">${name}${isCinderella?`<span class="cinderella-badge">⭐ Cinderella</span>`:''}</td>
       <td><span class="region-tag region-${t.region}">${t.region}</span></td>
       <td style="font-family:'Space Mono';font-size:12px;">${t.record}</td>
       <td><span class="stat-bar" style="width:${ppgBar}px;"></span>${t.ppg}</td>
       <td style="color:var(--muted);">${t.oppg}</td>
       <td><span class="stat-bar" style="width:${fgBar}px;background:linear-gradient(90deg,var(--blue),var(--green));"></span>${t.fg}%</td>
       <td>${t.three}%</td>
-      <td><span class="odds-pill ${oddsClass}">${t.odds}</span></td>
+      <td><span class="odds-pill ${oddsClass}" title="DraftKings: ${t.odds}">${americanToRatio(t.odds)}</span></td>
       <td style="font-size:11px;color:var(--muted);max-width:200px;">${t.notes}</td>
     </tr>`;
   }).join('');
@@ -1245,6 +1704,15 @@ function sortTable(field) {
 }
 
 // ===================== ODDS =====================
+function americanToRatio(americanOdds) {
+  // Display as American betting odds (+330, -150 etc.)
+  const s = String(americanOdds).trim();
+  if (!s) return '';
+  const n = parseInt(s.replace('+',''));
+  if (isNaN(n)) return '';
+  return n > 0 ? '+' + n : String(n);
+}
+
 function renderOdds() {
   const oddsData = Object.entries(TEAMS)
     .filter(([n,t]) => t.odds && t.odds !== '+999900' && t.odds !== '+500000')
@@ -1267,8 +1735,8 @@ function renderOdds() {
       <div class="odds-rank">#${i+1} RANKED</div>
       <div class="odds-team-name">${name} ${t.seed >= 12 ? '⭐' : ''}</div>
       <div class="odds-seed-region"><span class="seed-badge ${seedClass}" style="display:inline-flex;width:auto;padding:0 6px;border-radius:4px;font-size:10px;">S${t.seed}</span> &nbsp;${t.region}</div>
-      <div class="odds-number ${isFav?'odds-positive':isDog?'odds-negative':''}">${t.odds}</div>
-      <div class="odds-label">to win National Championship</div>
+      <div class="odds-number ${isFav?'odds-positive':isDog?'odds-negative':''}">${americanToRatio(t.odds)}</div>
+      <div class="odds-label">to win National Championship (DraftKings)</div>
       <div class="odds-divider"></div>
       <div class="odds-record">${t.record}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;">${t.notes.substring(0,80)}${t.notes.length>80?'...':''}</div>
@@ -1476,6 +1944,242 @@ const PLAYERS_DATA = [
 let playerSearch = '';
 let playerPosFilter = 'All';
 let playerSortDir = {};
+
+// ===================== TEAM INFO PANEL =====================
+function computeAdvanceProbs(teamName) {
+  const t = TEAMS[teamName] || {};
+  if (!t.seed) return null;
+  const SIMS = 8000;
+
+  // Find R1 actual opponent name
+  const allMatchups = Object.values(REGIONS).flat();
+  const myMatchup = allMatchups.find(m => m.teams.includes(teamName));
+
+  // Expected opponent seed per round for each seed line (1-16), indexed seed-1
+  // These reflect who each seed typically faces if they keep winning
+  const expectedOppSeed = {
+    1:  [16, 8,  4,  2,  1,  1],
+    2:  [15, 7,  3,  1,  1,  1],
+    3:  [14, 6,  2,  1,  1,  1],
+    4:  [13, 5,  1,  2,  1,  1],
+    5:  [12, 4,  3,  2,  1,  1],
+    6:  [11, 3,  4,  1,  1,  1],
+    7:  [10, 2,  3,  1,  1,  1],
+    8:  [9,  1,  4,  2,  1,  1],
+    9:  [8,  1,  4,  2,  1,  1],
+    10: [7,  2,  3,  1,  1,  1],
+    11: [6,  3,  4,  1,  1,  1],
+    12: [5,  4,  3,  2,  1,  1],
+    13: [4,  1,  2,  1,  1,  1],
+    14: [3,  2,  1,  1,  1,  1],
+    15: [2,  1,  1,  1,  1,  1],
+    16: [1,  2,  4,  2,  1,  1],
+  };
+
+  const seed = t.seed || 8;
+  const oppSeeds = expectedOppSeed[seed] || [1,1,1,1,1,1];
+
+  // Win probability for THIS team against a given opponent seed
+  function winProbVsSeed(oppSeed) {
+    // Get actual opponent stats if R1 actual opponent available
+    const [sF, sD] = seed <= oppSeed ? [seed, oppSeed] : [oppSeed, seed];
+    const teamIsFav = seed === sF;
+    const histDogWin = mcHistBase(sF, sD); // probability the DOG wins
+    const teamWinHist = teamIsFav ? (1 - histDogWin) : histDogWin;
+
+    // Stat-based: compare team strength vs average team of that seed
+    const oppTeams = Object.values(TEAMS).filter(x => x.seed === oppSeed);
+    const avg = (arr, fn) => arr.length ? arr.reduce((s,x)=>s+(fn(x)||0),0)/arr.length : 0;
+    const oppStats = oppTeams.length
+      ? { ppg:avg(oppTeams,x=>x.ppg), oppg:avg(oppTeams,x=>x.oppg),
+          fg:avg(oppTeams,x=>x.fg), three:avg(oppTeams,x=>x.three), record:'20-12', notes:'' }
+      : { ppg:72, oppg:70, fg:44, three:34, record:'20-12', notes:'' };
+
+    const strTeam = mcStrength(t) - mcInjury(t);
+    const strOpp  = mcStrength(oppStats);
+    const noise = () => (Math.random()+Math.random()+Math.random()-1.5)*8;
+
+    // Stat-based win prob: how often does this team outscore opponent?
+    let statWins = 0;
+    for (let i = 0; i < SIMS; i++) {
+      if (strTeam + noise() > strOpp + noise()) statWins++;
+    }
+    const teamWinStat = statWins / SIMS;
+
+    // Blend: 40% historical seed rates + 60% stat simulation
+    return teamWinHist * 0.4 + teamWinStat * 0.6;
+  }
+
+  const probs = {};
+  let survival = 1.0;
+  for (let round = 1; round <= 6; round++) {
+    let oppSeed = oppSeeds[round - 1];
+    // R1: use actual opponent if known
+    if (round === 1 && myMatchup) {
+      const oppName = myMatchup.teams.find(n => n !== teamName);
+      if (oppName && TEAMS[oppName]) oppSeed = TEAMS[oppName].seed || oppSeed;
+    }
+    const winProb = winProbVsSeed(oppSeed);
+    survival *= winProb;
+    probs[round] = survival;
+  }
+  return probs;
+}
+
+function openTeamPanel(teamName, matchupKey) {
+  const t = TEAMS[teamName] || {};
+  document.getElementById('tp-name').textContent = teamName;
+  document.getElementById('tp-meta').textContent =
+    'Seed ' + (t.seed||'?') + '  ·  ' + (t.region||'') + '  ·  ' + (t.record||'');
+  document.getElementById('tp-notes').textContent =
+    t.notes || 'No scouting notes available.';
+
+  // Stats
+  const statsHtml = [
+    ['PPG', t.ppg], ['Opp PPG', t.oppg],
+    ['FG%', t.fg ? t.fg+'%' : null], ['3P%', t.three ? t.three+'%' : null],
+    ['Championship Odds', t.odds ? americanToRatio(t.odds) : null],
+  ].filter(r=>r[1]!=null).map(r=>
+    `<div class="team-panel-stat-row"><span style="color:var(--muted);">${r[0]}</span><span class="team-panel-stat-val">${r[1]}</span></div>`
+  ).join('');
+  document.getElementById('tp-stats').innerHTML = statsHtml || '<div style="color:var(--muted);font-size:12px;">No stats available.</div>';
+
+  // Upset info — use matchupKey to find opponent for this specific round
+  const allPicks = activeBracket ? (picks[activeBracket.id]||{}) : {};
+  let upsetHtml = '';
+  let oppName = null;
+  const rnNames = ['','R64','R32','Sweet 16','Elite 8','Final Four','Championship'];
+  let roundLabel = 'R64';
+
+  if (matchupKey) {
+    const rn = getRoundNumber(matchupKey);
+    roundLabel = rnNames[rn] || ('Round ' + rn);
+    if (rn === 1) {
+      const m = Object.values(REGIONS).flat().find(m => m.id === matchupKey);
+      if (m) oppName = m.teams.find(n => n !== teamName);
+    } else {
+      // R2+: reconstruct opponent from picks
+      const p = matchupKey[0];
+      if (matchupKey.includes('R2_')) {
+        const idx = parseInt(matchupKey.split('_')[1]);
+        const pairs = [[0,1],[2,3],[4,5],[6,7]];
+        const pair = pairs[idx];
+        if (pair) { const t1=allPicks[p+(pair[0]+1)], t2=allPicks[p+(pair[1]+1)]; oppName = t1===teamName?t2:t1; }
+      } else if (matchupKey.includes('R3_')) {
+        const idx = parseInt(matchupKey.split('_')[1]);
+        const pairs = [[0,1],[2,3]];
+        const pair = pairs[idx];
+        if (pair) { const t1=allPicks[p+'R2_'+pair[0]], t2=allPicks[p+'R2_'+pair[1]]; oppName = t1===teamName?t2:t1; }
+      } else if (matchupKey.includes('R4')) {
+        const t1=allPicks[p+'R3_0'], t2=allPicks[p+'R3_1']; oppName = t1===teamName?t2:t1;
+      } else if (matchupKey==='FF_SF1') {
+        const t1=allPicks['ER4'], t2=allPicks['SR4']; oppName = t1===teamName?t2:t1;
+      } else if (matchupKey==='FF_SF2') {
+        const t1=allPicks['WR4'], t2=allPicks['MR4']; oppName = t1===teamName?t2:t1;
+      } else if (matchupKey==='FF_CHAMP') {
+        const t1=allPicks['FF_SF1'], t2=allPicks['FF_SF2']; oppName = t1===teamName?t2:t1;
+      }
+    }
+  } else {
+    // No key passed — fall back to R1 lookup
+    const m = Object.values(REGIONS).flat().find(m => m.teams.includes(teamName));
+    if (m) oppName = m.teams.find(n => n !== teamName);
+  }
+
+  if (oppName && TEAMS[oppName]) {
+    const u = computeUpsetProb(teamName, oppName, 6000);
+    if (u) {
+      const pct = Math.round(u.upsetPct * 100);
+      const favPct = 100 - pct;
+      // teamName could be the fav OR the dog — label accordingly
+      const viewingDog = (teamName === u.dog);
+      const col = u.upsetPct>=0.35?'var(--red)':u.upsetPct>=0.22?'var(--orange)':u.upsetPct>=0.10?'var(--gold)':'var(--muted)';
+      // Only show upset alert labels if viewing the underdog; if viewing the favorite show a calm status
+      const alertLabel = viewingDog
+        ? (u.upsetPct>=0.35?'🔥🔥🔥 High Upset Alert':u.upsetPct>=0.22?'🔥🔥 Real Upset Threat':u.upsetPct>=0.10?'🔥 Worth Watching':'📊 Tough matchup')
+        : (u.upsetPct>=0.35?'🛡️ Upset Risk — stay alert':u.upsetPct>=0.22?'⚠️ Moderate upset risk':u.upsetPct>=0.10?'✅ Slight risk, likely advance':'✅ Likely to advance');
+      // Win % for the team being viewed
+      const viewingWinPct = viewingDog ? pct : favPct;
+      const viewingWinCol = viewingDog ? col : 'var(--blue)';
+
+      upsetHtml = `<div style="background:rgba(255,78,0,0.06);border:1px solid var(--border);border-left:3px solid ${col};border-radius:8px;padding:12px 14px;">
+
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-size:10px;color:${col};font-weight:700;letter-spacing:1px;">${alertLabel}</div>
+          <div style="font-size:10px;color:var(--muted);">${roundLabel}</div>
+        </div>
+
+        <!-- Big win % for the team you clicked -->
+        <div style="text-align:center;margin-bottom:10px;">
+          <div style="font-family:'Bebas Neue';font-size:42px;line-height:1;color:${viewingWinCol};">${viewingWinPct}%</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">model win probability · ${roundLabel}</div>
+        </div>
+
+        <!-- Head to head bar -->
+        <div style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:11px;font-weight:700;">${u.fav} <span style="color:var(--muted);font-weight:400;">(${u.seedFav}-seed)</span></span>
+            <span style="font-size:11px;font-weight:700;">${u.dog} <span style="color:var(--muted);font-weight:400;">(${u.seedDog}-seed)</span></span>
+          </div>
+          <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;gap:2px;">
+            <div style="background:var(--blue);flex:${favPct};border-radius:4px 0 0 4px;"></div>
+            <div style="background:${col};flex:${pct};border-radius:0 4px 4px 0;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:3px;">
+            <span style="font-size:10px;color:var(--blue);font-weight:700;">${favPct}%</span>
+            <span style="font-size:10px;color:${col};font-weight:700;">${pct}%</span>
+          </div>
+        </div>
+
+        <!-- Key explaining thresholds -->
+        <div style="background:var(--navy3);border-radius:6px;padding:8px 10px;margin-top:8px;">
+          <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;margin-bottom:5px;">HOW TO READ THIS</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 8px;font-size:10px;line-height:1.5;">
+            <span style="color:var(--red);">🔥🔥🔥</span><span style="color:var(--muted);">≥35% upset chance — major threat</span>
+            <span style="color:var(--orange);">🔥🔥</span><span style="color:var(--muted);">22–34% — real upset threat</span>
+            <span style="color:var(--gold);">🔥</span><span style="color:var(--muted);">10–21% — worth watching</span>
+            <span style="color:var(--muted);">📊</span><span style="color:var(--muted);">&lt;10% — tough but possible</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px;border-top:1px solid var(--border);padding-top:5px;">Probabilities from Monte Carlo model (historical seed rates + FG%, margin, win%, injuries)</div>
+        </div>
+
+        ${u.hasInjury?`<div style="font-size:11px;color:var(--red);margin-top:6px;">⚠️ ${u.fav} has an injury concern — boosts upset odds</div>`:''}
+        ${u.hasCinderella?`<div style="font-size:11px;color:var(--gold);margin-top:4px;">⭐ ${u.dog} is a Cinderella seed candidate</div>`:''}
+      </div>`;
+    }
+  }
+  document.getElementById('tp-upset').innerHTML = upsetHtml;
+
+  // Open panel first, then compute advance probs
+  document.getElementById('team-panel-overlay').classList.add('open');
+  document.getElementById('team-panel').classList.add('open');
+  document.getElementById('tp-advance').innerHTML =
+    '<div style="color:var(--muted);font-size:11px;">Computing...</div>';
+
+  setTimeout(() => {
+    const probs = computeAdvanceProbs(teamName);
+    if (!probs) { document.getElementById('tp-advance').innerHTML = ''; return; }
+    const labels = ['','R64','R32','Sweet 16','Elite 8','Final Four','Champion'];
+    const col = p => p>=0.5?'var(--green)':p>=0.2?'var(--gold)':p>=0.08?'var(--orange)':'var(--red)';
+    document.getElementById('tp-advance').innerHTML = [1,2,3,4,5,6].map(r => {
+      const p = probs[r]||0, pct = Math.round(p*100), w = Math.max(3,pct);
+      return `<div style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+          <span style="font-size:11px;color:var(--muted);">${labels[r]}</span>
+          <span style="font-size:11px;font-weight:700;color:${col(p)};">${pct}%</span>
+        </div>
+        <div style="height:5px;background:var(--border);border-radius:3px;">
+          <div style="height:5px;background:${col(p)};border-radius:3px;width:${w}%;"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }, 30);
+}
+
+function closeTeamPanel() {
+  document.getElementById('team-panel-overlay').classList.remove('open');
+  document.getElementById('team-panel').classList.remove('open');
+}
 
 function renderPlayers() {
   let data = [...PLAYERS_DATA];
